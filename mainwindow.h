@@ -2,7 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "datavisioncorrectgait.h"
 #include "datavisiondynamixel.h"
 #include "datavisionnineaxissensor.h"
 #include "datavisionzmp.h"
@@ -38,14 +37,7 @@ private:
 
     sshConnectWindow *sshConWin = NULL;  // ssh连接窗口
 
-
-
-
     DataVisionNineAxisSensor *datavisionNas = NULL;
-
-
-    DataVisionCorrectGait *datavisionCorrectGait = NULL;
-
 
     DataVisionDynamixel *datavisionDyna = NULL;
 
@@ -65,8 +57,6 @@ private slots:
     void on_networkCom_triggered();
 
     void on_nineAxisSensor_triggered();
-
-    void on_gaitCorrect_triggered();
 
     void on_steeringEngine_triggered();
 
@@ -95,11 +85,8 @@ private slots:
 
     void on_sshConnect_triggered();
 
-    void on_btnStartGetData_clicked();
-
     void on_pushButtonClearText_clicked();
 
-    void on_btnStopGetData_clicked();
 
 private:
     Ui::MainWindow *ui;    

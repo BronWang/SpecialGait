@@ -13,7 +13,6 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    datavisioncorrectgait.cpp \
     datavisiondynamixel.cpp \
     datavisionnineaxissensor.cpp \
     datavisionzmp.cpp \
@@ -362,7 +361,6 @@ HEADERS += \
     Eigen/src/plugins/MatrixCwiseBinaryOps.h \
     Eigen/src/plugins/MatrixCwiseUnaryOps.h \
     Eigen/src/plugins/ReshapedMethods.h \
-    datavisioncorrectgait.h \
     datavisiondynamixel.h \
     datavisionnineaxissensor.h \
     datavisionzmp.h \
@@ -375,7 +373,6 @@ HEADERS += \
     sshconnectwindow.h
 
 FORMS += \
-    datavisioncorrectgait.ui \
     datavisiondynamixel.ui \
     datavisionnineaxissensor.ui \
     datavisionzmp.ui \
@@ -391,6 +388,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 
 RESOURCES += \
     res.qrc
+
+RC_ICONS = icon\ikid.ico
 
 
 

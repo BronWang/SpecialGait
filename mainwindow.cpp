@@ -12,13 +12,11 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle("机器人平衡");
+    this->setWindowTitle("SpecialGait");
     ui->checkBoxSerial->setEnabled(false);
     ui->checkBoxNetwork->setEnabled(false);
     ui->btnCancelSerialPortCon->setEnabled(false);
     ui->btnCancelNetCon->setEnabled(false);
-    ui->btnStopGetData->setEnabled(false);
-    ui->btnStartGetData->setEnabled(true);
 
     labelSocketState = new QLabel("Socket状态：");
     labelSocketState->setMinimumWidth(250);
@@ -89,17 +87,6 @@ void MainWindow::on_nineAxisSensor_triggered()
     // 功能细节
 
     datavisionNas->show();
-}
-
-
-void MainWindow::on_gaitCorrect_triggered()
-{
-    if (datavisionCorrectGait == NULL)
-        datavisionCorrectGait = new DataVisionCorrectGait(this);
-    datavisionCorrectGait->setWindowTitle("矫正步态");
-    // 功能细节
-
-    datavisionCorrectGait->show();
 }
 
 
@@ -283,10 +270,6 @@ void MainWindow::sendSerialPortData()
 
 void MainWindow::on_btnCancelSerialPortCon_clicked()
 {
-    if(ui->btnStopGetData->isEnabled()){
-        QMessageBox::warning(this, "警告", "请先停止获取串口数据再断开串口连接！");
-        return;
-    }
     mySerialPort->close();
     ui->checkBoxSerial->setChecked(false);
     ui->checkBoxSerial->setText("串口已连接");
@@ -477,29 +460,12 @@ void MainWindow::on_sshConnect_triggered()
 }
 
 
-void MainWindow::on_btnStartGetData_clicked()
-{
-    /*******测试代码↓********/
-    ui->btnStopGetData->setEnabled(true);
-    ui->btnStartGetData->setEnabled(false);
-    if(ui->checkBoxSerial->isChecked()){
-        isSerialSendEnable = true;
-        sendSerialPortData();
-    }
-    /*******测试代码↑********/
-}
-
-
 void MainWindow::on_pushButtonClearText_clicked()
 {
     ui->plainTextEditGaitData->clear();
 }
 
 
-void MainWindow::on_btnStopGetData_clicked()
-{
-    ui->btnStopGetData->setEnabled(false);
-    ui->btnStartGetData->setEnabled(true);
-    isSerialSendEnable = false;
-}
+
+
 
