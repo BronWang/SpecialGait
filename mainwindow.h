@@ -81,8 +81,6 @@ private slots:
     void on_openFile_triggered();
     void on_saveFile_triggered();
 
-    void on_btnfilePathSensorDynaZMP_clicked();
-
     void onConnectNetwork(QString IP, quint16 port);
     void onDisConnectNetwork();
     void onNetworkConnected();
@@ -91,8 +89,6 @@ private slots:
     void onSocketReadyRead();
 
     void on_btnCancelNetCon_clicked();
-
-    void on_btnSelSdzFilePath_clicked();
 
     void on_sshConnect_triggered();
 
@@ -110,6 +106,8 @@ private slots:
     void on_btnInsertFrame_clicked();
 
     void on_btnDelCurFrame_clicked();
+
+    void send_horizontalSlider_Data();
 
     void on_horizontalSlider_valueChanged(int value);
 
@@ -202,6 +200,8 @@ private slots:
     void on_btnResetFrame_clicked();
 
     void on_btnExecList_clicked();
+
+    void on_newFile_triggered();
 
 private:
     Ui::MainWindow *ui;

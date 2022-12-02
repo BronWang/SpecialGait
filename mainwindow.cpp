@@ -414,23 +414,6 @@ void MainWindow::on_saveFile_triggered()
 }
 
 
-void MainWindow::on_btnfilePathSensorDynaZMP_clicked()
-{
-    QString curPath=QDir::currentPath();//获取系统当前目录
-    QString dlgTitle="选择存储文件路径"; //对话框标题
-    QString filter="矫正步态文件(*.sdz)"; //文件过滤器
-    QString aFileName=QFileDialog::getSaveFileName(this,dlgTitle,curPath,filter);
-
-    if (aFileName.isEmpty())
-        return;
-    QFile   aFile(aFileName);
-    if (!aFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        return;
-    aFile.close();
-    ui->lineEditFilePathSdz->setText(aFileName);
-
-}
-
 void MainWindow::onConnectNetwork(QString IP, quint16 port)
 {
     tcpClient->connectToHost(IP, port);
@@ -511,23 +494,6 @@ void MainWindow::on_btnCancelNetCon_clicked()
 {
     onDisConnectNetwork();
     ui->btnCancelNetCon->setEnabled(false);
-}
-
-
-void MainWindow::on_btnSelSdzFilePath_clicked()
-{
-    QString curPath=QDir::currentPath();//获取系统当前目录
-    QString dlgTitle="选择存储文件路径"; //对话框标题
-    QString filter="矫正步态文件(*.sdz)"; //文件过滤器
-    QString aFileName=QFileDialog::getOpenFileName(this,dlgTitle,curPath,filter);
-
-    if (aFileName.isEmpty())
-        return;
-    QFile   aFile(aFileName);
-    if (!aFile.open(QIODevice::WriteOnly | QIODevice::Text))
-        return;
-    aFile.close();
-    ui->lineEditSelSdzFilePath->setText(aFileName);
 }
 
 
@@ -766,11 +732,44 @@ void MainWindow::on_btnDelCurFrame_clicked()
 
 }
 
+void MainWindow::send_horizontalSlider_Data()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        QString ready_send_msg = "special_giat_data";
+        ready_send_msg.append("\n");
+        ready_send_msg += QString::asprintf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
+                                            ui->horizontalSlider->value()/180.0*PI,
+                                            ui->horizontalSlider_2->value()/180.0*PI,
+                                            ui->horizontalSlider_3->value()/180.0*PI,
+                                            ui->horizontalSlider_4->value()/180.0*PI,
+                                            ui->horizontalSlider_5->value()/180.0*PI,
+                                            ui->horizontalSlider_6->value()/180.0*PI,
+                                            ui->horizontalSlider_7->value()/180.0*PI,
+                                            ui->horizontalSlider_8->value()/180.0*PI,
+                                            ui->horizontalSlider_9->value()/180.0*PI,
+                                            ui->horizontalSlider_10->value()/180.0*PI,
+                                            ui->horizontalSlider_11->value()/180.0*PI,
+                                            ui->horizontalSlider_12->value()/180.0*PI,
+                                            ui->horizontalSlider_13->value()/180.0*PI,
+                                            ui->horizontalSlider_14->value()/180.0*PI,
+                                            ui->horizontalSlider_15->value()/180.0*PI,
+                                            ui->horizontalSlider_16->value()/180.0*PI,
+                                            ui->horizontalSlider_17->value()/180.0*PI,
+                                            ui->horizontalSlider_18->value()/180.0*PI,
+                                            ui->horizontalSlider_19->value()/180.0*PI,
+                                            ui->horizontalSlider_20->value()/180.0*PI);
+        ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
+        QByteArray  send_msg=ready_send_msg.toUtf8();
+        tcpClient->write(send_msg);
+    }
+}
+
 
 void MainWindow::on_horizontalSlider_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -778,6 +777,7 @@ void MainWindow::on_horizontalSlider_2_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_2->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -785,6 +785,7 @@ void MainWindow::on_horizontalSlider_3_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_3->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -792,6 +793,7 @@ void MainWindow::on_horizontalSlider_4_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_4->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -799,6 +801,7 @@ void MainWindow::on_horizontalSlider_5_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_5->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -806,6 +809,7 @@ void MainWindow::on_horizontalSlider_6_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_6->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -813,6 +817,7 @@ void MainWindow::on_horizontalSlider_7_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_7->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -820,6 +825,7 @@ void MainWindow::on_horizontalSlider_8_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_8->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -827,6 +833,7 @@ void MainWindow::on_horizontalSlider_9_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_9->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -834,6 +841,7 @@ void MainWindow::on_horizontalSlider_10_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_10->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -841,6 +849,7 @@ void MainWindow::on_horizontalSlider_11_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_11->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -848,6 +857,7 @@ void MainWindow::on_horizontalSlider_12_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_12->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -855,6 +865,7 @@ void MainWindow::on_horizontalSlider_13_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_13->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -862,6 +873,7 @@ void MainWindow::on_horizontalSlider_14_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_14->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -869,6 +881,7 @@ void MainWindow::on_horizontalSlider_15_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_15->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -876,6 +889,7 @@ void MainWindow::on_horizontalSlider_16_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_16->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -883,6 +897,7 @@ void MainWindow::on_horizontalSlider_17_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_17->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -890,6 +905,7 @@ void MainWindow::on_horizontalSlider_18_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_18->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -897,6 +913,7 @@ void MainWindow::on_horizontalSlider_19_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_19->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -904,6 +921,7 @@ void MainWindow::on_horizontalSlider_20_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
     ui->spinBox_20->setValue(value);
+    send_horizontalSlider_Data();
 }
 
 
@@ -1123,6 +1141,8 @@ void MainWindow::on_btnExecPreFrame_clicked()
         tcpClient->write(send_msg);
         theSelection->clearSelection();
         theSelection->setCurrentIndex(theModel->index(index.row()-1,0),QItemSelectionModel::Select);
+    }else{
+        QMessageBox::information(this,"提示","请先连接网络！");
     }
 }
 
@@ -1146,6 +1166,8 @@ void MainWindow::on_btnExecLaterFrame_clicked()
         tcpClient->write(send_msg);
         theSelection->clearSelection();
         theSelection->setCurrentIndex(theModel->index(index.row()+1,0),QItemSelectionModel::Select);
+    }else{
+        QMessageBox::information(this,"提示","请先连接网络！");
     }
 }
 
@@ -1186,6 +1208,84 @@ void MainWindow::on_btnExecList_clicked()
             tcpClient->waitForReadyRead(1000);
             qApp->processEvents();
         }
+    }else{
+        QMessageBox::information(this,"提示","请先连接网络！");
     }
+}
+
+
+void MainWindow::on_newFile_triggered()
+{
+    QString curPath=QDir::currentPath();//获取系统当前目录
+    QString dlgTitle="选择存储文件路径"; //对话框标题
+    QString filter="步态文件(*.txt)"; //文件过滤器
+    QString aFileName=QFileDialog::getSaveFileName(this,dlgTitle,curPath,filter);
+
+    if (aFileName.isEmpty())
+        return;
+    QFile   aFile(aFileName);
+    if (!aFile.open(QIODevice::WriteOnly | QIODevice::Text))
+        return;
+
+    QTextStream stream(&aFile);
+    stream.setCodec("utf-8");
+    QString str;
+    QStandardItem *item;
+    ui->plainTextEditGaitData->clear();
+    QString tempstr;
+    tempstr = "GaitID";
+    str = tempstr+"\n";
+    str.append("0");
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+    tempstr = "GaitDescription";
+    str = tempstr+"\n";
+    str.append(" ");
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+    tempstr = "zero_point";
+    QString temp_zero_point = "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+    str = tempstr+"\n"+temp_zero_point;
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+    str = "Gait_Frame";
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+    str = "";
+    for(int i = 0;i<FixedColumnCount-1;i++){
+        str = str + "0,";
+    }
+    str.append("0");
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+
+    aFile.close();
+
+    // 打开新建文件
+    currentFileName = aFileName;
+    if (aFileName.isEmpty())
+        return;
+    aFile.setFileName(aFileName);
+    if (!aFile.exists()) //文件不存在
+        return;
+    if (!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
+        return;
+    QStringList fileContent;
+    QTextStream newStream(&aFile);
+    newStream.setCodec("utf-8");
+    ui->plainTextEditGaitData->clear();
+    while(!newStream.atEnd()){
+        QString str = newStream.readLine();
+        fileContent.append(str);
+        ui->plainTextEditGaitData->appendPlainText(str);
+    }
+    aFile.close();
+    if(fileContent.isEmpty()){
+        QMessageBox::warning(this,"警告","文件为空！");
+        return;
+    }
+    iniModelFromStringList(fileContent);
+    ui->anotherSaveFile->setEnabled(true);
+    ui->btnExecList->setEnabled(true);
 }
 

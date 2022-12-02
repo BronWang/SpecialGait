@@ -972,7 +972,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QGroupBox" name="groupBoxSensorDynaZMP">
+       <widget class="QGroupBox" name="groupBoxFileDesc">
         <property name="minimumSize">
          <size>
           <width>0</width>
@@ -986,50 +986,20 @@
          </size>
         </property>
         <property name="title">
-         <string>传感器+舵机+ZMP(sdz文件)</string>
+         <string>文件描述</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
-         <item row="0" column="0" colspan="2">
-          <widget class="QLineEdit" name="lineEditFilePathSdz">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>30</height>
-            </size>
-           </property>
-          </widget>
-         </item>
-         <item row="1" column="0" colspan="2">
-          <widget class="QPushButton" name="btnfilePathSensorDynaZMP">
-           <property name="minimumSize">
-            <size>
-             <width>0</width>
-             <height>30</height>
-            </size>
-           </property>
-           <property name="text">
-            <string>选择存储文件路径</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="0">
-          <widget class="QLabel" name="label_21">
-           <property name="text">
-            <string>步态号:</string>
-           </property>
-          </widget>
-         </item>
-         <item row="2" column="1">
+         <item row="0" column="1">
           <widget class="QLineEdit" name="lineEditGaitID"/>
          </item>
-         <item row="3" column="0">
+         <item row="1" column="0">
           <widget class="QLabel" name="label_22">
            <property name="text">
             <string>步态描述:</string>
            </property>
           </widget>
          </item>
-         <item row="3" column="1">
+         <item row="1" column="1">
           <widget class="QTextEdit" name="textEditGaitDesc">
            <property name="maximumSize">
             <size>
@@ -1039,61 +1009,14 @@
            </property>
           </widget>
          </item>
+         <item row="0" column="0">
+          <widget class="QLabel" name="label_21">
+           <property name="text">
+            <string>步态号:</string>
+           </property>
+          </widget>
+         </item>
         </layout>
-       </widget>
-      </item>
-      <item>
-       <widget class="QGroupBox" name="groupBoxGaitCorrect">
-        <property name="minimumSize">
-         <size>
-          <width>0</width>
-          <height>100</height>
-         </size>
-        </property>
-        <property name="maximumSize">
-         <size>
-          <width>500</width>
-          <height>16777215</height>
-         </size>
-        </property>
-        <property name="title">
-         <string>计算矫正步态</string>
-        </property>
-        <widget class="QPushButton" name="btnSelSdzFilePath">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>70</y>
-           <width>117</width>
-           <height>28</height>
-          </rect>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>100</height>
-          </size>
-         </property>
-         <property name="text">
-          <string>选择sdz文件...</string>
-         </property>
-        </widget>
-        <widget class="QLineEdit" name="lineEditSelSdzFilePath">
-         <property name="geometry">
-          <rect>
-           <x>10</x>
-           <y>30</y>
-           <width>165</width>
-           <height>28</height>
-          </rect>
-         </property>
-         <property name="maximumSize">
-          <size>
-           <width>16777215</width>
-           <height>30</height>
-          </size>
-         </property>
-        </widget>
        </widget>
       </item>
      </layout>
@@ -1113,6 +1036,7 @@
     <property name="title">
      <string>文件</string>
     </property>
+    <addaction name="newFile"/>
     <addaction name="openFile"/>
     <addaction name="saveFile"/>
    </widget>
@@ -1160,6 +1084,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="newFile"/>
    <addaction name="openFile"/>
    <addaction name="saveFile"/>
    <addaction name="anotherSaveFile"/>
