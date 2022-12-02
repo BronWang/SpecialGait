@@ -3,6 +3,7 @@
 
 #include <QDir>
 #include <QFileDialog>
+#define FixedColumnCount 20
 
 
 #pragma execution_character_set("utf-8")
@@ -17,6 +18,17 @@ MainWindow::MainWindow(QWidget *parent)
     ui->checkBoxNetwork->setEnabled(false);
     ui->btnCancelSerialPortCon->setEnabled(false);
     ui->btnCancelNetCon->setEnabled(false);
+    ui->btnDelCurFrame->setEnabled(false);
+    ui->btnAppendFrame->setEnabled(false);
+    ui->btnInsertFrame->setEnabled(false);
+    ui->btnExecCurFrame->setEnabled(false);
+    ui->btnExecLaterFrame->setEnabled(false);
+    ui->btnExecPreFrame->setEnabled(false);
+    ui->btnResetFrame->setEnabled(false);
+    ui->btnExecList->setEnabled(false);
+    ui->anotherSaveFile->setEnabled(false);
+    ui->scrollArea->setEnabled(false);
+    ui->btnReturnCentralValue->setEnabled(false);
 
     labelSocketState = new QLabel("Socket状态：");
     labelSocketState->setMinimumWidth(250);
@@ -25,6 +37,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->statusbar->addWidget(labelSocketState);
     ui->statusbar->addWidget(labelSeverIP);
 
+    //tableview部分
+    theModel = new QStandardItemModel(5, FixedColumnCount, this);
+    theSelection = new QItemSelectionModel(theModel);
+    ui->tableView->setModel(theModel);
+    ui->tableView->setSelectionModel(theSelection);
+    ui->tableView->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    ui->tableView->verticalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
+    connect(theSelection,SIGNAL(currentChanged(QModelIndex,QModelIndex)),this,SLOT(on_tableCurrentChanged(QModelIndex,QModelIndex)));
+    connect(theSelection,SIGNAL(selectionChanged(QItemSelection,QItemSelection)),this,SLOT(on_tableSelectionChanged(QItemSelection,QItemSelection)));
 }
 
 MainWindow::~MainWindow()
@@ -109,6 +130,31 @@ void MainWindow::on_zmpTrajectory_triggered()
     // 功能细节
 
     datavisionZmp->show();
+}
+
+void MainWindow::on_tableCurrentChanged(const QModelIndex &current, const QModelIndex &previous)
+{
+    if(!current.isValid()){
+
+        return;
+    }
+
+}
+
+void MainWindow::on_tableSelectionChanged(const QItemSelection &current, const QItemSelection &previous)
+{
+    if(current.indexes().empty()){
+        ui->btnDelCurFrame->setEnabled(false);
+        ui->btnAppendFrame->setEnabled(false);
+        ui->btnInsertFrame->setEnabled(false);
+        ui->btnExecCurFrame->setEnabled(false);
+        ui->btnExecLaterFrame->setEnabled(false);
+        ui->btnExecPreFrame->setEnabled(false);
+        ui->btnResetFrame->setEnabled(false);
+        ui->scrollArea->setEnabled(false);
+        ui->btnReturnCentralValue->setEnabled(false);
+        return;
+    }
 }
 
 void MainWindow::onSerialPortConnect(const QString portName, QString baudRate)
@@ -279,12 +325,12 @@ void MainWindow::on_btnCancelSerialPortCon_clicked()
 
 void MainWindow::on_openFile_triggered()
 {
-    // 打开矫正步态文件
+    // 打开步态序列文件
     QString curPath=QDir::currentPath();//获取系统当前目录
-    QString dlgTitle="打开一个矫正步态文件"; //对话框标题
-    QString filter="矫正步态文件(*.cgait)"; //文件过滤器
+    QString dlgTitle="打开一个步态序列文件"; //对话框标题
+    QString filter="步态序列文件(*.txt)"; //文件过滤器
     QString aFileName=QFileDialog::getOpenFileName(this,dlgTitle,curPath,filter);
-
+    currentFileName = aFileName;
     if (aFileName.isEmpty())
         return;
     QFile   aFile(aFileName);
@@ -296,18 +342,29 @@ void MainWindow::on_openFile_triggered()
     if (!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 
-    ui->plainTextEditGaitData->setPlainText(aFile.readAll());
-
+    QStringList fileContent;
+    QTextStream stream(&aFile);
+    stream.setCodec("utf-8");
+    ui->plainTextEditGaitData->clear();
+    while(!stream.atEnd()){
+        QString str = stream.readLine();
+        fileContent.append(str);
+        ui->plainTextEditGaitData->appendPlainText(str);
+    }
     aFile.close();
+    if(fileContent.isEmpty()){
+        QMessageBox::warning(this,"警告","文件为空！");
+        return;
+    }
+    iniModelFromStringList(fileContent);
+    ui->anotherSaveFile->setEnabled(true);
+    ui->btnExecList->setEnabled(true);
 }
 
 
 void MainWindow::on_saveFile_triggered()
 {
-    QString curPath=QDir::currentPath();//获取系统当前目录
-    QString dlgTitle="另存为一个矫正步态文件"; //对话框标题
-    QString filter="矫正步态文件(*.cgait)"; //文件过滤器
-    QString aFileName=QFileDialog::getSaveFileName(this,dlgTitle,curPath,filter);
+    QString aFileName=currentFileName;
 
     if (aFileName.isEmpty())
         return;
@@ -316,11 +373,40 @@ void MainWindow::on_saveFile_triggered()
     if (!aFile.open(QIODevice::WriteOnly | QIODevice::Text))
         return;
 
-    QString str=ui->plainTextEditGaitData->toPlainText();//整个内容作为字符串
-
-    QByteArray  strBytes=str.toUtf8();//转换为字节数组
-
-    aFile.write(strBytes,strBytes.length());  //写入文件
+    QTextStream stream(&aFile);
+    stream.setCodec("utf-8");
+    QString str;
+    QStandardItem *item;
+    ui->plainTextEditGaitData->clear();
+    QString tempstr;
+    tempstr = "GaitID";
+    str = tempstr+"\n"+ ui->lineEditGaitID->text();
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+    tempstr = "GaitDescription";
+    str = tempstr+"\n"+ui->textEditGaitDesc->toPlainText();
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+    tempstr = "zero_point";
+    QString temp_zero_point = "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+    str = tempstr+"\n"+temp_zero_point;
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+    str = "Gait_Frame";
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+    for(int i = 0;i<theModel->rowCount();i++){
+        str = "";
+        int j = 0;
+        for(;j<theModel->columnCount()-1;j++){
+            item = theModel->item(i,j);
+            str = str + item->text()+",";
+        }
+        item = theModel->item(i,j);
+        str = str + item->text();
+        stream << str << "\n";
+        ui->plainTextEditGaitData->appendPlainText(str);
+    }
 
     aFile.close();
     return;
@@ -452,8 +538,8 @@ void MainWindow::on_sshConnect_triggered()
     // 功能细节
     connect(sshConWin,SIGNAL(sigConnectStateChanged(bool,QString,int)),
             sshConWin,SLOT(slotConnectStateChanged(bool,QString,int)));
-    connect(sshConWin,SIGNAL(sigDataArrived(QString ,QString , int )),
-            sshConWin,SLOT(slotDataArrived(QString ,QString , int )));
+    connect(sshConWin,SIGNAL(sigDataArrived(QString,QString,int)),
+            sshConWin,SLOT(slotDataArrived(QString,QString,int)));
     connect(sshConWin,SIGNAL(sigSend(QString)),sshConWin,SLOT(slotSend(QString)));
     connect(sshConWin,SIGNAL(sigDisconnected()),sshConWin,SLOT(slotDisconnected()));
     sshConWin->show();
@@ -467,5 +553,535 @@ void MainWindow::on_pushButtonClearText_clicked()
 
 
 
+void MainWindow::on_tableView_clicked(const QModelIndex &index)
+{
+    if(!index.isValid()){
+        ui->btnDelCurFrame->setEnabled(false);
+        ui->btnAppendFrame->setEnabled(false);
+        ui->btnInsertFrame->setEnabled(false);
+        ui->btnExecCurFrame->setEnabled(false);
+        ui->btnExecLaterFrame->setEnabled(false);
+        ui->btnExecPreFrame->setEnabled(false);
+        ui->btnResetFrame->setEnabled(false);
+        ui->scrollArea->setEnabled(false);
+        ui->btnReturnCentralValue->setEnabled(false);
+        return;
+    }
+    if(currentFileName != ""){  // 加载文件后才使能相应按钮
+        ui->btnDelCurFrame->setEnabled(true);
+        ui->btnAppendFrame->setEnabled(true);
+        ui->btnInsertFrame->setEnabled(true);
+        ui->btnExecCurFrame->setEnabled(true);
+        ui->btnExecLaterFrame->setEnabled(true);
+        ui->btnExecPreFrame->setEnabled(true);
+        ui->btnResetFrame->setEnabled(true);
+        ui->scrollArea->setEnabled(true);
+        ui->btnReturnCentralValue->setEnabled(true);
+        // 把滑块数值和表格数值相对应
+        ui->horizontalSlider->setValue(theModel->item(index.row(),0)->text().toInt());
+        ui->horizontalSlider_2->setValue(theModel->item(index.row(),1)->text().toInt());
+        ui->horizontalSlider_3->setValue(theModel->item(index.row(),2)->text().toInt());
+        ui->horizontalSlider_4->setValue(theModel->item(index.row(),3)->text().toInt());
+        ui->horizontalSlider_5->setValue(theModel->item(index.row(),4)->text().toInt());
+        ui->horizontalSlider_6->setValue(theModel->item(index.row(),5)->text().toInt());
+        ui->horizontalSlider_7->setValue(theModel->item(index.row(),6)->text().toInt());
+        ui->horizontalSlider_8->setValue(theModel->item(index.row(),7)->text().toInt());
+        ui->horizontalSlider_9->setValue(theModel->item(index.row(),8)->text().toInt());
+        ui->horizontalSlider_10->setValue(theModel->item(index.row(),9)->text().toInt());
+        ui->horizontalSlider_11->setValue(theModel->item(index.row(),10)->text().toInt());
+        ui->horizontalSlider_12->setValue(theModel->item(index.row(),11)->text().toInt());
+        ui->horizontalSlider_13->setValue(theModel->item(index.row(),12)->text().toInt());
+        ui->horizontalSlider_14->setValue(theModel->item(index.row(),13)->text().toInt());
+        ui->horizontalSlider_15->setValue(theModel->item(index.row(),14)->text().toInt());
+        ui->horizontalSlider_16->setValue(theModel->item(index.row(),15)->text().toInt());
+        ui->horizontalSlider_17->setValue(theModel->item(index.row(),16)->text().toInt());
+        ui->horizontalSlider_18->setValue(theModel->item(index.row(),17)->text().toInt());
+        ui->horizontalSlider_19->setValue(theModel->item(index.row(),18)->text().toInt());
+        ui->horizontalSlider_20->setValue(theModel->item(index.row(),19)->text().toInt());
+        // spinbox数值和表格数值相对应
+        ui->spinBox->setValue(theModel->item(index.row(),0)->text().toInt());
+        ui->spinBox_2->setValue(theModel->item(index.row(),1)->text().toInt());
+        ui->spinBox_3->setValue(theModel->item(index.row(),2)->text().toInt());
+        ui->spinBox_4->setValue(theModel->item(index.row(),3)->text().toInt());
+        ui->spinBox_5->setValue(theModel->item(index.row(),4)->text().toInt());
+        ui->spinBox_6->setValue(theModel->item(index.row(),5)->text().toInt());
+        ui->spinBox_7->setValue(theModel->item(index.row(),6)->text().toInt());
+        ui->spinBox_8->setValue(theModel->item(index.row(),7)->text().toInt());
+        ui->spinBox_9->setValue(theModel->item(index.row(),8)->text().toInt());
+        ui->spinBox_10->setValue(theModel->item(index.row(),9)->text().toInt());
+        ui->spinBox_11->setValue(theModel->item(index.row(),10)->text().toInt());
+        ui->spinBox_12->setValue(theModel->item(index.row(),11)->text().toInt());
+        ui->spinBox_13->setValue(theModel->item(index.row(),12)->text().toInt());
+        ui->spinBox_14->setValue(theModel->item(index.row(),13)->text().toInt());
+        ui->spinBox_15->setValue(theModel->item(index.row(),14)->text().toInt());
+        ui->spinBox_16->setValue(theModel->item(index.row(),15)->text().toInt());
+        ui->spinBox_17->setValue(theModel->item(index.row(),16)->text().toInt());
+        ui->spinBox_18->setValue(theModel->item(index.row(),17)->text().toInt());
+        ui->spinBox_19->setValue(theModel->item(index.row(),18)->text().toInt());
+        ui->spinBox_20->setValue(theModel->item(index.row(),19)->text().toInt());
+    }
+}
 
+void MainWindow::iniModelFromStringList(QStringList &fileContent)
+{
+    theModel->setRowCount(fileContent.count()-7);
+    QString temp;
+    temp = fileContent.at(0);
+    if(temp != "GaitID"){
+        QMessageBox::warning(this,"警告","文件格式不正确！");
+        return;
+    }
+    QString gaitID = fileContent.at(1);
+    ui->lineEditGaitID->setText(gaitID);
+    temp = fileContent.at(2);
+    if(temp != "GaitDescription"){
+        QMessageBox::warning(this,"警告","文件格式不正确！");
+        return;
+    }
+    QString gaitDesc = fileContent.at(3);
+    ui->textEditGaitDesc->setText(gaitDesc);
+    temp = fileContent.at(4);
+    if(temp != "zero_point"){
+        QMessageBox::warning(this,"警告","文件格式不正确！");
+        return;
+    }
+    QString zero_point = fileContent.at(5);
+    QStringList zero_point_list = zero_point.split(",",QString::SkipEmptyParts);
+    temp = fileContent.at(6);
+    if(temp != "Gait_Frame"){
+        QMessageBox::warning(this,"警告","文件格式不正确！");
+        return;
+    }
+    for(int i = 7;i < fileContent.count();i++){
+        QString gait_frame = fileContent.at(i);
+        QStringList gait_frame_list = gait_frame.split(",",QString::SkipEmptyParts);
+        for(int j = 0; j < FixedColumnCount;j++){
+            QStandardItem *item = new QStandardItem(gait_frame_list.at(j));
+            theModel->setItem(i-7,j,item);
+        }
+    }
+
+}
+
+
+void MainWindow::on_anotherSaveFile_triggered()
+{
+    QString curPath=QDir::currentPath();//获取系统当前目录
+    QString dlgTitle="另存为一个步态文件"; //对话框标题
+    QString filter="步态文件(*.txt)"; //文件过滤器
+    QString aFileName=QFileDialog::getSaveFileName(this,dlgTitle,curPath,filter);
+
+    if (aFileName.isEmpty())
+        return;
+    QFile   aFile(aFileName);
+
+    if (!aFile.open(QIODevice::WriteOnly | QIODevice::Text))
+        return;
+
+    QTextStream stream(&aFile);
+    stream.setCodec("utf-8");
+    QString str;
+    QStandardItem *item;
+    ui->plainTextEditGaitData->clear();
+    QString tempstr;
+    tempstr = "GaitID";
+    str = tempstr+"\n"+ ui->lineEditGaitID->text();
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+    tempstr = "GaitDescription";
+    str = tempstr+"\n"+ui->textEditGaitDesc->toPlainText();
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+    tempstr = "zero_point";
+    QString temp_zero_point = "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+    str = tempstr+"\n"+temp_zero_point;
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+    str = "Gait_Frame";
+    stream << str << "\n";
+    ui->plainTextEditGaitData->appendPlainText(str);
+    for(int i = 0;i<theModel->rowCount();i++){
+        str = "";
+        int j = 0;
+        for(;j<theModel->columnCount()-1;j++){
+            item = theModel->item(i,j);
+            str = str + item->text()+",";
+        }
+        item = theModel->item(i,j);
+        str = str + item->text();
+        stream << str << "\n";
+        ui->plainTextEditGaitData->appendPlainText(str);
+    }
+
+    aFile.close();
+    return;
+}
+
+
+void MainWindow::on_btnAppendFrame_clicked()
+{
+    QList<QStandardItem*> itemList;
+    QStandardItem *item;
+    QStandardItem *newItem;
+    for (int i = 0; i < FixedColumnCount; ++i) {
+        item = theModel->item(theModel->rowCount()-1,i);
+        newItem = new QStandardItem(item->text());
+        itemList<<newItem;
+    }
+    theModel->appendRow(itemList);
+    theSelection->clearSelection();
+    QModelIndex index = theModel->index(theModel->rowCount()-1,0);
+    theSelection->setCurrentIndex(index,QItemSelectionModel::Select);
+}
+
+
+void MainWindow::on_btnInsertFrame_clicked()
+{
+    QList<QStandardItem*> itemList;
+    QStandardItem *item;
+    QStandardItem *newItem;
+    for (int i = 0; i < FixedColumnCount; ++i) {
+        item = theModel->item(theSelection->currentIndex().row(),i);
+        newItem = new QStandardItem(item->text());
+        itemList<<newItem;
+    }
+    int curRow = theSelection->currentIndex().row();
+    theModel->insertRow(curRow+1,itemList);
+    QModelIndex index = theModel->index(curRow+1,0);
+    theSelection->clearSelection();
+    theSelection->setCurrentIndex(index,QItemSelectionModel::Select);
+}
+
+
+void MainWindow::on_btnDelCurFrame_clicked()
+{
+    QModelIndex index = theSelection->currentIndex();
+    if(index.row() != theModel->rowCount()-1){
+        theModel->removeRow(index.row());
+        theSelection->setCurrentIndex(index,QItemSelectionModel::Select);
+    }else {
+        theModel->removeRow(index.row());
+    }
+
+}
+
+
+void MainWindow::on_horizontalSlider_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),0)->setData(value,Qt::DisplayRole);
+    ui->spinBox->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_2_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),1)->setData(value,Qt::DisplayRole);
+    ui->spinBox_2->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_3_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),2)->setData(value,Qt::DisplayRole);
+    ui->spinBox_3->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_4_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),3)->setData(value,Qt::DisplayRole);
+    ui->spinBox_4->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_5_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),4)->setData(value,Qt::DisplayRole);
+    ui->spinBox_5->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_6_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),5)->setData(value,Qt::DisplayRole);
+    ui->spinBox_6->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_7_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),6)->setData(value,Qt::DisplayRole);
+    ui->spinBox_7->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_8_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),7)->setData(value,Qt::DisplayRole);
+    ui->spinBox_8->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_9_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),8)->setData(value,Qt::DisplayRole);
+    ui->spinBox_9->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_10_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),9)->setData(value,Qt::DisplayRole);
+    ui->spinBox_10->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_11_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),10)->setData(value,Qt::DisplayRole);
+    ui->spinBox_11->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_12_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),11)->setData(value,Qt::DisplayRole);
+    ui->spinBox_12->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_13_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),12)->setData(value,Qt::DisplayRole);
+    ui->spinBox_13->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_14_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),13)->setData(value,Qt::DisplayRole);
+    ui->spinBox_14->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_15_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),14)->setData(value,Qt::DisplayRole);
+    ui->spinBox_15->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_16_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),15)->setData(value,Qt::DisplayRole);
+    ui->spinBox_16->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_17_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),16)->setData(value,Qt::DisplayRole);
+    ui->spinBox_17->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_18_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),17)->setData(value,Qt::DisplayRole);
+    ui->spinBox_18->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_19_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),18)->setData(value,Qt::DisplayRole);
+    ui->spinBox_19->setValue(value);
+}
+
+
+void MainWindow::on_horizontalSlider_20_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),19)->setData(value,Qt::DisplayRole);
+    ui->spinBox_20->setValue(value);
+}
+
+
+void MainWindow::on_spinBox_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),0)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_2_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),1)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_2->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_3_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),2)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_3->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_4_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),3)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_4->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_5_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),4)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_5->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_6_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),5)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_6->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_7_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),6)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_7->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_8_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),7)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_8->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_9_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),8)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_9->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_10_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),9)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_10->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_11_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),10)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_11->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_12_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),11)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_12->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_13_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),12)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_13->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_14_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),13)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_14->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_15_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),14)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_15->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_16_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),15)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_16->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_17_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),16)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_17->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_18_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),17)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_18->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_19_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),18)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_19->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_20_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),19)->setData(arg1,Qt::DisplayRole);
+    ui->horizontalSlider_20->setValue(arg1);
+}
 

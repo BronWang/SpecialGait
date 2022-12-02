@@ -13,6 +13,8 @@
 #include <QTimer>
 #include <QLabel>
 #include <QDebug>
+#include <QStandardItemModel>
+#include <QItemSelectionModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -41,8 +43,14 @@ private:
 
     DataVisionDynamixel *datavisionDyna = NULL;
 
-
     DataVisionZmp *datavisionZmp = NULL;
+
+    // 用来显示tableview数据
+    QStandardItemModel *theModel;
+    QItemSelectionModel *theSelection;
+
+    //当前打开的文件名
+    QString currentFileName;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -61,6 +69,9 @@ private slots:
     void on_steeringEngine_triggered();
 
     void on_zmpTrajectory_triggered();
+
+    void on_tableCurrentChanged(const QModelIndex& current,const QModelIndex& previous);
+    void on_tableSelectionChanged(const QItemSelection& current ,const QItemSelection& previous);
 
     void onSerialPortConnect(const QString, QString);
     void sendSerialPortData();
@@ -88,8 +99,101 @@ private slots:
     void on_pushButtonClearText_clicked();
 
 
+    void on_tableView_clicked(const QModelIndex &index);
+
+    void on_anotherSaveFile_triggered();
+
+
+
+    void on_btnAppendFrame_clicked();
+
+    void on_btnInsertFrame_clicked();
+
+    void on_btnDelCurFrame_clicked();
+
+    void on_horizontalSlider_valueChanged(int value);
+
+    void on_horizontalSlider_2_valueChanged(int value);
+
+    void on_horizontalSlider_3_valueChanged(int value);
+
+    void on_horizontalSlider_4_valueChanged(int value);
+
+    void on_horizontalSlider_5_valueChanged(int value);
+
+    void on_horizontalSlider_6_valueChanged(int value);
+
+    void on_horizontalSlider_7_valueChanged(int value);
+
+    void on_horizontalSlider_8_valueChanged(int value);
+
+    void on_horizontalSlider_9_valueChanged(int value);
+
+    void on_horizontalSlider_10_valueChanged(int value);
+
+    void on_horizontalSlider_11_valueChanged(int value);
+
+    void on_horizontalSlider_12_valueChanged(int value);
+
+    void on_horizontalSlider_13_valueChanged(int value);
+
+    void on_horizontalSlider_14_valueChanged(int value);
+
+    void on_horizontalSlider_15_valueChanged(int value);
+
+    void on_horizontalSlider_16_valueChanged(int value);
+
+    void on_horizontalSlider_17_valueChanged(int value);
+
+    void on_horizontalSlider_18_valueChanged(int value);
+
+    void on_horizontalSlider_19_valueChanged(int value);
+
+    void on_horizontalSlider_20_valueChanged(int value);
+
+    void on_spinBox_valueChanged(int arg1);
+
+    void on_spinBox_2_valueChanged(int arg1);
+
+    void on_spinBox_3_valueChanged(int arg1);
+
+    void on_spinBox_4_valueChanged(int arg1);
+
+    void on_spinBox_5_valueChanged(int arg1);
+
+    void on_spinBox_6_valueChanged(int arg1);
+
+    void on_spinBox_7_valueChanged(int arg1);
+
+    void on_spinBox_8_valueChanged(int arg1);
+
+    void on_spinBox_9_valueChanged(int arg1);
+
+    void on_spinBox_10_valueChanged(int arg1);
+
+    void on_spinBox_11_valueChanged(int arg1);
+
+    void on_spinBox_12_valueChanged(int arg1);
+
+    void on_spinBox_13_valueChanged(int arg1);
+
+    void on_spinBox_14_valueChanged(int arg1);
+
+    void on_spinBox_15_valueChanged(int arg1);
+
+    void on_spinBox_16_valueChanged(int arg1);
+
+    void on_spinBox_17_valueChanged(int arg1);
+
+    void on_spinBox_18_valueChanged(int arg1);
+
+    void on_spinBox_19_valueChanged(int arg1);
+
+    void on_spinBox_20_valueChanged(int arg1);
+
 private:
-    Ui::MainWindow *ui;    
+    Ui::MainWindow *ui;
+    void iniModelFromStringList(QStringList& fileContent);
 
 };
 #endif // MAINWINDOW_H
