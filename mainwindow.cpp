@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QFileDialog>
 #define FixedColumnCount 20
+#define PI 3.1415926
 
 
 #pragma execution_character_set("utf-8")
@@ -21,7 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->btnDelCurFrame->setEnabled(false);
     ui->btnAppendFrame->setEnabled(false);
     ui->btnInsertFrame->setEnabled(false);
-    ui->btnExecCurFrame->setEnabled(false);
+    ui->btnRecordCurFrame->setEnabled(false);
     ui->btnExecLaterFrame->setEnabled(false);
     ui->btnExecPreFrame->setEnabled(false);
     ui->btnResetFrame->setEnabled(false);
@@ -147,7 +148,7 @@ void MainWindow::on_tableSelectionChanged(const QItemSelection &current, const Q
         ui->btnDelCurFrame->setEnabled(false);
         ui->btnAppendFrame->setEnabled(false);
         ui->btnInsertFrame->setEnabled(false);
-        ui->btnExecCurFrame->setEnabled(false);
+        ui->btnRecordCurFrame->setEnabled(false);
         ui->btnExecLaterFrame->setEnabled(false);
         ui->btnExecPreFrame->setEnabled(false);
         ui->btnResetFrame->setEnabled(false);
@@ -559,7 +560,7 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
         ui->btnDelCurFrame->setEnabled(false);
         ui->btnAppendFrame->setEnabled(false);
         ui->btnInsertFrame->setEnabled(false);
-        ui->btnExecCurFrame->setEnabled(false);
+        ui->btnRecordCurFrame->setEnabled(false);
         ui->btnExecLaterFrame->setEnabled(false);
         ui->btnExecPreFrame->setEnabled(false);
         ui->btnResetFrame->setEnabled(false);
@@ -571,7 +572,7 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
         ui->btnDelCurFrame->setEnabled(true);
         ui->btnAppendFrame->setEnabled(true);
         ui->btnInsertFrame->setEnabled(true);
-        ui->btnExecCurFrame->setEnabled(true);
+        ui->btnRecordCurFrame->setEnabled(true);
         ui->btnExecLaterFrame->setEnabled(true);
         ui->btnExecPreFrame->setEnabled(true);
         ui->btnResetFrame->setEnabled(true);
@@ -769,7 +770,6 @@ void MainWindow::on_btnDelCurFrame_clicked()
 void MainWindow::on_horizontalSlider_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),0)->setData(value,Qt::DisplayRole);
     ui->spinBox->setValue(value);
 }
 
@@ -777,7 +777,6 @@ void MainWindow::on_horizontalSlider_valueChanged(int value)
 void MainWindow::on_horizontalSlider_2_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),1)->setData(value,Qt::DisplayRole);
     ui->spinBox_2->setValue(value);
 }
 
@@ -785,7 +784,6 @@ void MainWindow::on_horizontalSlider_2_valueChanged(int value)
 void MainWindow::on_horizontalSlider_3_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),2)->setData(value,Qt::DisplayRole);
     ui->spinBox_3->setValue(value);
 }
 
@@ -793,7 +791,6 @@ void MainWindow::on_horizontalSlider_3_valueChanged(int value)
 void MainWindow::on_horizontalSlider_4_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),3)->setData(value,Qt::DisplayRole);
     ui->spinBox_4->setValue(value);
 }
 
@@ -801,7 +798,6 @@ void MainWindow::on_horizontalSlider_4_valueChanged(int value)
 void MainWindow::on_horizontalSlider_5_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),4)->setData(value,Qt::DisplayRole);
     ui->spinBox_5->setValue(value);
 }
 
@@ -809,7 +805,6 @@ void MainWindow::on_horizontalSlider_5_valueChanged(int value)
 void MainWindow::on_horizontalSlider_6_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),5)->setData(value,Qt::DisplayRole);
     ui->spinBox_6->setValue(value);
 }
 
@@ -817,7 +812,6 @@ void MainWindow::on_horizontalSlider_6_valueChanged(int value)
 void MainWindow::on_horizontalSlider_7_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),6)->setData(value,Qt::DisplayRole);
     ui->spinBox_7->setValue(value);
 }
 
@@ -825,7 +819,6 @@ void MainWindow::on_horizontalSlider_7_valueChanged(int value)
 void MainWindow::on_horizontalSlider_8_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),7)->setData(value,Qt::DisplayRole);
     ui->spinBox_8->setValue(value);
 }
 
@@ -833,7 +826,6 @@ void MainWindow::on_horizontalSlider_8_valueChanged(int value)
 void MainWindow::on_horizontalSlider_9_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),8)->setData(value,Qt::DisplayRole);
     ui->spinBox_9->setValue(value);
 }
 
@@ -841,7 +833,6 @@ void MainWindow::on_horizontalSlider_9_valueChanged(int value)
 void MainWindow::on_horizontalSlider_10_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),9)->setData(value,Qt::DisplayRole);
     ui->spinBox_10->setValue(value);
 }
 
@@ -849,7 +840,6 @@ void MainWindow::on_horizontalSlider_10_valueChanged(int value)
 void MainWindow::on_horizontalSlider_11_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),10)->setData(value,Qt::DisplayRole);
     ui->spinBox_11->setValue(value);
 }
 
@@ -857,7 +847,6 @@ void MainWindow::on_horizontalSlider_11_valueChanged(int value)
 void MainWindow::on_horizontalSlider_12_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),11)->setData(value,Qt::DisplayRole);
     ui->spinBox_12->setValue(value);
 }
 
@@ -865,7 +854,6 @@ void MainWindow::on_horizontalSlider_12_valueChanged(int value)
 void MainWindow::on_horizontalSlider_13_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),12)->setData(value,Qt::DisplayRole);
     ui->spinBox_13->setValue(value);
 }
 
@@ -873,7 +861,6 @@ void MainWindow::on_horizontalSlider_13_valueChanged(int value)
 void MainWindow::on_horizontalSlider_14_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),13)->setData(value,Qt::DisplayRole);
     ui->spinBox_14->setValue(value);
 }
 
@@ -881,7 +868,6 @@ void MainWindow::on_horizontalSlider_14_valueChanged(int value)
 void MainWindow::on_horizontalSlider_15_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),14)->setData(value,Qt::DisplayRole);
     ui->spinBox_15->setValue(value);
 }
 
@@ -889,7 +875,6 @@ void MainWindow::on_horizontalSlider_15_valueChanged(int value)
 void MainWindow::on_horizontalSlider_16_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),15)->setData(value,Qt::DisplayRole);
     ui->spinBox_16->setValue(value);
 }
 
@@ -897,7 +882,6 @@ void MainWindow::on_horizontalSlider_16_valueChanged(int value)
 void MainWindow::on_horizontalSlider_17_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),16)->setData(value,Qt::DisplayRole);
     ui->spinBox_17->setValue(value);
 }
 
@@ -905,7 +889,6 @@ void MainWindow::on_horizontalSlider_17_valueChanged(int value)
 void MainWindow::on_horizontalSlider_18_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),17)->setData(value,Qt::DisplayRole);
     ui->spinBox_18->setValue(value);
 }
 
@@ -913,7 +896,6 @@ void MainWindow::on_horizontalSlider_18_valueChanged(int value)
 void MainWindow::on_horizontalSlider_19_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),18)->setData(value,Qt::DisplayRole);
     ui->spinBox_19->setValue(value);
 }
 
@@ -921,7 +903,6 @@ void MainWindow::on_horizontalSlider_19_valueChanged(int value)
 void MainWindow::on_horizontalSlider_20_valueChanged(int value)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),19)->setData(value,Qt::DisplayRole);
     ui->spinBox_20->setValue(value);
 }
 
@@ -929,7 +910,6 @@ void MainWindow::on_horizontalSlider_20_valueChanged(int value)
 void MainWindow::on_spinBox_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),0)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider->setValue(arg1);
 }
 
@@ -937,7 +917,6 @@ void MainWindow::on_spinBox_valueChanged(int arg1)
 void MainWindow::on_spinBox_2_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),1)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_2->setValue(arg1);
 }
 
@@ -945,7 +924,6 @@ void MainWindow::on_spinBox_2_valueChanged(int arg1)
 void MainWindow::on_spinBox_3_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),2)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_3->setValue(arg1);
 }
 
@@ -953,7 +931,6 @@ void MainWindow::on_spinBox_3_valueChanged(int arg1)
 void MainWindow::on_spinBox_4_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),3)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_4->setValue(arg1);
 }
 
@@ -961,7 +938,6 @@ void MainWindow::on_spinBox_4_valueChanged(int arg1)
 void MainWindow::on_spinBox_5_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),4)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_5->setValue(arg1);
 }
 
@@ -969,7 +945,6 @@ void MainWindow::on_spinBox_5_valueChanged(int arg1)
 void MainWindow::on_spinBox_6_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),5)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_6->setValue(arg1);
 }
 
@@ -977,7 +952,6 @@ void MainWindow::on_spinBox_6_valueChanged(int arg1)
 void MainWindow::on_spinBox_7_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),6)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_7->setValue(arg1);
 }
 
@@ -985,7 +959,6 @@ void MainWindow::on_spinBox_7_valueChanged(int arg1)
 void MainWindow::on_spinBox_8_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),7)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_8->setValue(arg1);
 }
 
@@ -993,7 +966,6 @@ void MainWindow::on_spinBox_8_valueChanged(int arg1)
 void MainWindow::on_spinBox_9_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),8)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_9->setValue(arg1);
 }
 
@@ -1001,7 +973,6 @@ void MainWindow::on_spinBox_9_valueChanged(int arg1)
 void MainWindow::on_spinBox_10_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),9)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_10->setValue(arg1);
 }
 
@@ -1009,7 +980,6 @@ void MainWindow::on_spinBox_10_valueChanged(int arg1)
 void MainWindow::on_spinBox_11_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),10)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_11->setValue(arg1);
 }
 
@@ -1017,7 +987,6 @@ void MainWindow::on_spinBox_11_valueChanged(int arg1)
 void MainWindow::on_spinBox_12_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),11)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_12->setValue(arg1);
 }
 
@@ -1025,7 +994,6 @@ void MainWindow::on_spinBox_12_valueChanged(int arg1)
 void MainWindow::on_spinBox_13_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),12)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_13->setValue(arg1);
 }
 
@@ -1033,7 +1001,6 @@ void MainWindow::on_spinBox_13_valueChanged(int arg1)
 void MainWindow::on_spinBox_14_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),13)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_14->setValue(arg1);
 }
 
@@ -1041,7 +1008,6 @@ void MainWindow::on_spinBox_14_valueChanged(int arg1)
 void MainWindow::on_spinBox_15_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),14)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_15->setValue(arg1);
 }
 
@@ -1049,7 +1015,6 @@ void MainWindow::on_spinBox_15_valueChanged(int arg1)
 void MainWindow::on_spinBox_16_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),15)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_16->setValue(arg1);
 }
 
@@ -1057,7 +1022,6 @@ void MainWindow::on_spinBox_16_valueChanged(int arg1)
 void MainWindow::on_spinBox_17_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),16)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_17->setValue(arg1);
 }
 
@@ -1065,7 +1029,6 @@ void MainWindow::on_spinBox_17_valueChanged(int arg1)
 void MainWindow::on_spinBox_18_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),17)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_18->setValue(arg1);
 }
 
@@ -1073,7 +1036,6 @@ void MainWindow::on_spinBox_18_valueChanged(int arg1)
 void MainWindow::on_spinBox_19_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),18)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_19->setValue(arg1);
 }
 
@@ -1081,7 +1043,149 @@ void MainWindow::on_spinBox_19_valueChanged(int arg1)
 void MainWindow::on_spinBox_20_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
-    theModel->item(index.row(),19)->setData(arg1,Qt::DisplayRole);
     ui->horizontalSlider_20->setValue(arg1);
+}
+
+
+void MainWindow::on_btnReturnCentralValue_clicked()
+{
+    int value = QMessageBox::information(this,"提示","确定回答中央值吗？",QMessageBox::Yes,QMessageBox::No);
+    if(value == QMessageBox::Yes){
+        ui->horizontalSlider->setValue(0);
+        ui->horizontalSlider_2->setValue(0);
+        ui->horizontalSlider_3->setValue(0);
+        ui->horizontalSlider_4->setValue(0);
+        ui->horizontalSlider_5->setValue(0);
+        ui->horizontalSlider_6->setValue(0);
+        ui->horizontalSlider_7->setValue(0);
+        ui->horizontalSlider_8->setValue(0);
+        ui->horizontalSlider_9->setValue(0);
+        ui->horizontalSlider_10->setValue(0);
+        ui->horizontalSlider_11->setValue(0);
+        ui->horizontalSlider_12->setValue(0);
+        ui->horizontalSlider_13->setValue(0);
+        ui->horizontalSlider_14->setValue(0);
+        ui->horizontalSlider_15->setValue(0);
+        ui->horizontalSlider_16->setValue(0);
+        ui->horizontalSlider_17->setValue(0);
+        ui->horizontalSlider_18->setValue(0);
+        ui->horizontalSlider_19->setValue(0);
+        ui->horizontalSlider_20->setValue(0);
+    }else {
+        return;
+    }
+
+}
+
+
+void MainWindow::on_btnRecordCurFrame_clicked()
+{
+    QModelIndex index =  theSelection->currentIndex();
+    theModel->item(index.row(),0)->setData(ui->horizontalSlider->value(),Qt::DisplayRole);
+    theModel->item(index.row(),1)->setData(ui->horizontalSlider_2->value(),Qt::DisplayRole);
+    theModel->item(index.row(),2)->setData(ui->horizontalSlider_3->value(),Qt::DisplayRole);
+    theModel->item(index.row(),3)->setData(ui->horizontalSlider_4->value(),Qt::DisplayRole);
+    theModel->item(index.row(),4)->setData(ui->horizontalSlider_5->value(),Qt::DisplayRole);
+    theModel->item(index.row(),5)->setData(ui->horizontalSlider_6->value(),Qt::DisplayRole);
+    theModel->item(index.row(),6)->setData(ui->horizontalSlider_7->value(),Qt::DisplayRole);
+    theModel->item(index.row(),7)->setData(ui->horizontalSlider_8->value(),Qt::DisplayRole);
+    theModel->item(index.row(),8)->setData(ui->horizontalSlider_9->value(),Qt::DisplayRole);
+    theModel->item(index.row(),9)->setData(ui->horizontalSlider_10->value(),Qt::DisplayRole);
+    theModel->item(index.row(),10)->setData(ui->horizontalSlider_11->value(),Qt::DisplayRole);
+    theModel->item(index.row(),11)->setData(ui->horizontalSlider_12->value(),Qt::DisplayRole);
+    theModel->item(index.row(),12)->setData(ui->horizontalSlider_13->value(),Qt::DisplayRole);
+    theModel->item(index.row(),13)->setData(ui->horizontalSlider_14->value(),Qt::DisplayRole);
+    theModel->item(index.row(),14)->setData(ui->horizontalSlider_15->value(),Qt::DisplayRole);
+    theModel->item(index.row(),15)->setData(ui->horizontalSlider_16->value(),Qt::DisplayRole);
+    theModel->item(index.row(),16)->setData(ui->horizontalSlider_17->value(),Qt::DisplayRole);
+    theModel->item(index.row(),17)->setData(ui->horizontalSlider_18->value(),Qt::DisplayRole);
+    theModel->item(index.row(),18)->setData(ui->horizontalSlider_19->value(),Qt::DisplayRole);
+    theModel->item(index.row(),19)->setData(ui->horizontalSlider_20->value(),Qt::DisplayRole);
+}
+
+
+void MainWindow::on_btnExecPreFrame_clicked()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        QModelIndex index = theSelection->currentIndex();
+        if(index.row() == 0){
+            QMessageBox::warning(this,"警告","当前帧为第一帧！无法执行前一帧");
+            return;
+        }
+        QString ready_send_msg = "special_giat_data";
+        ready_send_msg.append("\n");
+        for(int i = 0; i < FixedColumnCount-1; i++){
+            ready_send_msg += QString::asprintf("%f,",theModel->item(index.row()-1,i)->text().toInt()/180.0*PI);
+        }
+        ready_send_msg += QString::asprintf("%f", theModel->item(index.row()-1,FixedColumnCount-1)->text().toInt()/180.0*PI);
+        ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
+        QByteArray  send_msg=ready_send_msg.toUtf8();
+        tcpClient->write(send_msg);
+        theSelection->clearSelection();
+        theSelection->setCurrentIndex(theModel->index(index.row()-1,0),QItemSelectionModel::Select);
+    }
+}
+
+
+void MainWindow::on_btnExecLaterFrame_clicked()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        QModelIndex index = theSelection->currentIndex();
+        if(index.row() == theModel->rowCount()-1){
+            QMessageBox::warning(this,"警告","当前帧为最后一帧！无法执行后一帧");
+            return;
+        }
+        QString ready_send_msg = "special_giat_data";
+        ready_send_msg.append("\n");
+        for(int i = 0; i < FixedColumnCount-1; i++){
+            ready_send_msg += QString::asprintf("%f,",theModel->item(index.row()+1,i)->text().toInt()/180.0*PI);
+        }
+        ready_send_msg += QString::asprintf("%f", theModel->item(index.row()+1,FixedColumnCount-1)->text().toInt()/180.0*PI);
+        ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
+        QByteArray  send_msg=ready_send_msg.toUtf8();
+        tcpClient->write(send_msg);
+        theSelection->clearSelection();
+        theSelection->setCurrentIndex(theModel->index(index.row()+1,0),QItemSelectionModel::Select);
+    }
+}
+
+
+void MainWindow::on_btnResetFrame_clicked()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        QString ready_send_msg = "special_giat_data";
+        ready_send_msg.append("\n");
+        for(int i = 0; i < FixedColumnCount-1; i++){
+            ready_send_msg += QString::asprintf("%f,",theModel->item(0,i)->text().toInt()/180.0*PI);
+        }
+        ready_send_msg += QString::asprintf("%f", theModel->item(0,FixedColumnCount-1)->text().toInt()/180.0*PI);
+        ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
+        QByteArray  send_msg=ready_send_msg.toUtf8();
+        tcpClient->write(send_msg);
+        theSelection->clearSelection();
+        theSelection->setCurrentIndex(theModel->index(0,0),QItemSelectionModel::Select);
+    }
+}
+
+
+void MainWindow::on_btnExecList_clicked()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        for (int i = 0; i < theModel->rowCount(); ++i) {
+            QString ready_send_msg = "special_giat_data";
+            ready_send_msg.append("\n");
+            theSelection->clearSelection();
+            theSelection->setCurrentIndex(theModel->index(i,0),QItemSelectionModel::Select);
+            for(int j = 0; j < FixedColumnCount-1; j++){
+                ready_send_msg += QString::asprintf("%f,",theModel->item(i,j)->text().toInt()/180.0*PI);
+            }
+            ready_send_msg += QString::asprintf("%f", theModel->item(i,FixedColumnCount-1)->text().toInt()/180.0*PI);
+            ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
+            QByteArray  send_msg=ready_send_msg.toUtf8();
+            tcpClient->write(send_msg);
+            tcpClient->waitForReadyRead(1000);
+            qApp->processEvents();
+        }
+    }
 }
 

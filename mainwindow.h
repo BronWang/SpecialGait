@@ -35,7 +35,7 @@ private:
     QTcpSocket *tcpClient = NULL;  // 客户端socket
     QLabel *labelSocketState;  // 客户端socket状态标签
     QLabel *labelSeverIP;  // 服务端IP标签
-    QByteArray networkBuffer;  // 串口接收数据缓冲区
+    QByteArray networkBuffer;  // 网络接收数据缓冲区
 
     sshConnectWindow *sshConWin = NULL;  // ssh连接窗口
 
@@ -190,6 +190,18 @@ private slots:
     void on_spinBox_19_valueChanged(int arg1);
 
     void on_spinBox_20_valueChanged(int arg1);
+
+    void on_btnReturnCentralValue_clicked();
+
+    void on_btnRecordCurFrame_clicked();
+
+    void on_btnExecPreFrame_clicked();
+
+    void on_btnExecLaterFrame_clicked();
+
+    void on_btnResetFrame_clicked();
+
+    void on_btnExecList_clicked();
 
 private:
     Ui::MainWindow *ui;

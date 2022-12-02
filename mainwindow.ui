@@ -50,10 +50,84 @@
        <string>调试滑块</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
+       <item row="2" column="2">
+        <widget class="QPushButton" name="btnExecLaterFrame">
+         <property name="text">
+          <string>执行后一帧</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QPushButton" name="btnExecPreFrame">
+         <property name="text">
+          <string>执行前一帧</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="0">
+        <widget class="QPushButton" name="btnRecordCurFrame">
+         <property name="text">
+          <string>记录当前帧</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="3">
+        <widget class="QPushButton" name="btnAppendFrame">
+         <property name="text">
+          <string>添加帧</string>
+         </property>
+         <property name="checkable">
+          <bool>false</bool>
+         </property>
+         <property name="checked">
+          <bool>false</bool>
+         </property>
+        </widget>
+       </item>
        <item row="5" column="0">
         <widget class="QPushButton" name="btnReturnCentralValue">
          <property name="text">
           <string>回到中央值</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="0">
+        <widget class="QPushButton" name="btnInsertFrame">
+         <property name="text">
+          <string>插入帧</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QPushButton" name="btnDelCurFrame">
+         <property name="text">
+          <string>删除当前帧</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="3">
+        <widget class="QPushButton" name="btnExecList">
+         <property name="text">
+          <string>执行当前序列</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="2">
+        <widget class="QPushButton" name="btnResetFrame">
+         <property name="text">
+          <string>复位到首帧</string>
          </property>
         </widget>
        </item>
@@ -72,7 +146,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>0</y>
+            <y>-237</y>
             <width>464</width>
             <height>597</height>
            </rect>
@@ -819,79 +893,9 @@
         </widget>
        </item>
        <item row="0" column="0" colspan="4">
-        <widget class="QTableView" name="tableView"/>
-       </item>
-       <item row="2" column="0">
-        <widget class="QPushButton" name="btnExecCurFrame">
-         <property name="text">
-          <string>执行当前帧</string>
-         </property>
-         <property name="checkable">
-          <bool>false</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="1">
-        <widget class="QPushButton" name="btnExecPreFrame">
-         <property name="text">
-          <string>执行前一帧</string>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="2">
-        <widget class="QPushButton" name="btnExecLaterFrame">
-         <property name="text">
-          <string>执行后一帧</string>
-         </property>
-         <property name="checkable">
-          <bool>false</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="2" column="3">
-        <widget class="QPushButton" name="btnAppendFrame">
-         <property name="text">
-          <string>添加帧</string>
-         </property>
-         <property name="checkable">
-          <bool>false</bool>
-         </property>
-         <property name="checked">
-          <bool>false</bool>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="0">
-        <widget class="QPushButton" name="btnInsertFrame">
-         <property name="text">
-          <string>插入帧</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="3">
-        <widget class="QPushButton" name="btnExecList">
-         <property name="text">
-          <string>执行当前序列</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="2">
-        <widget class="QPushButton" name="btnResetFrame">
-         <property name="text">
-          <string>复位到首帧</string>
-         </property>
-        </widget>
-       </item>
-       <item row="3" column="1">
-        <widget class="QPushButton" name="btnDelCurFrame">
-         <property name="text">
-          <string>删除当前帧</string>
+        <widget class="QTableView" name="tableView">
+         <property name="editTriggers">
+          <set>QAbstractItemView::NoEditTriggers</set>
          </property>
         </widget>
        </item>
