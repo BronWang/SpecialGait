@@ -146,7 +146,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-237</y>
+            <y>0</y>
             <width>464</width>
             <height>597</height>
            </rect>
@@ -972,6 +972,35 @@
        </widget>
       </item>
       <item>
+       <widget class="QGroupBox" name="groupBox_2">
+        <property name="minimumSize">
+         <size>
+          <width>0</width>
+          <height>50</height>
+         </size>
+        </property>
+        <property name="title">
+         <string/>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_3">
+         <item>
+          <widget class="QRadioButton" name="rbtnAdjustZero">
+           <property name="text">
+            <string>调节零点</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="rbtnAdjustGait">
+           <property name="text">
+            <string>调节步态</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
        <widget class="QGroupBox" name="groupBoxFileDesc">
         <property name="minimumSize">
          <size>
@@ -993,13 +1022,13 @@
           <widget class="QLineEdit" name="lineEditGaitID"/>
          </item>
          <item row="1" column="0">
-          <widget class="QLabel" name="label_22">
+          <widget class="QLabel" name="label_23">
            <property name="text">
-            <string>步态描述:</string>
+            <string>步态帧率:</string>
            </property>
           </widget>
          </item>
-         <item row="1" column="1">
+         <item row="2" column="1">
           <widget class="QTextEdit" name="textEditGaitDesc">
            <property name="maximumSize">
             <size>
@@ -1013,6 +1042,16 @@
           <widget class="QLabel" name="label_21">
            <property name="text">
             <string>步态号:</string>
+           </property>
+          </widget>
+         </item>
+         <item row="1" column="1">
+          <widget class="QLineEdit" name="lineEditGaitRate"/>
+         </item>
+         <item row="2" column="0">
+          <widget class="QLabel" name="label_22">
+           <property name="text">
+            <string>步态描述:</string>
            </property>
           </widget>
          </item>
@@ -1094,6 +1133,7 @@
    <addaction name="sshConnect"/>
    <addaction name="separator"/>
    <addaction name="exit"/>
+   <addaction name="separator"/>
   </widget>
   <action name="serialPort">
    <property name="icon">

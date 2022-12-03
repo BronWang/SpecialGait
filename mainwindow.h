@@ -51,6 +51,12 @@ private:
 
     //当前打开的文件名
     QString currentFileName;
+    //存储步态零点
+    QString currentZeroPoint;
+    //存储步态数据
+    QStringList currentGaitFrames;
+    //存储步态帧率
+    int currentGaitRate=0;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -203,9 +209,15 @@ private slots:
 
     void on_newFile_triggered();
 
+
+    void on_rbtnAdjustZero_clicked();
+
+    void on_rbtnAdjustGait_clicked();
+
 private:
     Ui::MainWindow *ui;
     void iniModelFromStringList(QStringList& fileContent);
+    void iniModelFromStringList_zeroPoint(QStringList& fileContent);
 
 };
 #endif // MAINWINDOW_H
