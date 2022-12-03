@@ -3,7 +3,7 @@
 
 #include <QDir>
 #include <QFileDialog>
-#define FixedColumnCount 20
+#define FixedColumnCount 25
 #define PI 3.1415926
 
 
@@ -54,6 +54,18 @@ MainWindow::MainWindow(QWidget *parent)
     //输入格式限制
     ui->lineEditGaitID->setValidator(new QIntValidator(0,20000,ui->lineEditGaitID));
     ui->lineEditGaitRate->setValidator(new QIntValidator(0,300,ui->lineEditGaitRate));
+
+    //关闭所有用不到的关节
+    ui->horizontalSlider->setEnabled(false);
+    ui->horizontalSlider_7->setEnabled(false);
+    ui->horizontalSlider_11->setEnabled(false);
+    ui->horizontalSlider_18->setEnabled(false);
+    ui->horizontalSlider_25->setEnabled(false);
+    ui->spinBox->setEnabled(false);
+    ui->spinBox_7->setEnabled(false);
+    ui->spinBox_11->setEnabled(false);
+    ui->spinBox_18->setEnabled(false);
+    ui->spinBox_25->setEnabled(false);
 }
 
 MainWindow::~MainWindow()
@@ -613,52 +625,13 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
         ui->btnResetFrame->setEnabled(true);
         ui->scrollArea->setEnabled(true);
         ui->btnReturnCentralValue->setEnabled(true);
-        // 把滑块数值和表格数值相对应
-        ui->horizontalSlider->setValue(theModel->item(index.row(),0)->text().toInt());
-        ui->horizontalSlider_2->setValue(theModel->item(index.row(),1)->text().toInt());
-        ui->horizontalSlider_3->setValue(theModel->item(index.row(),2)->text().toInt());
-        ui->horizontalSlider_4->setValue(theModel->item(index.row(),3)->text().toInt());
-        ui->horizontalSlider_5->setValue(theModel->item(index.row(),4)->text().toInt());
-        ui->horizontalSlider_6->setValue(theModel->item(index.row(),5)->text().toInt());
-        ui->horizontalSlider_7->setValue(theModel->item(index.row(),6)->text().toInt());
-        ui->horizontalSlider_8->setValue(theModel->item(index.row(),7)->text().toInt());
-        ui->horizontalSlider_9->setValue(theModel->item(index.row(),8)->text().toInt());
-        ui->horizontalSlider_10->setValue(theModel->item(index.row(),9)->text().toInt());
-        ui->horizontalSlider_11->setValue(theModel->item(index.row(),10)->text().toInt());
-        ui->horizontalSlider_12->setValue(theModel->item(index.row(),11)->text().toInt());
-        ui->horizontalSlider_13->setValue(theModel->item(index.row(),12)->text().toInt());
-        ui->horizontalSlider_14->setValue(theModel->item(index.row(),13)->text().toInt());
-        ui->horizontalSlider_15->setValue(theModel->item(index.row(),14)->text().toInt());
-        ui->horizontalSlider_16->setValue(theModel->item(index.row(),15)->text().toInt());
-        ui->horizontalSlider_17->setValue(theModel->item(index.row(),16)->text().toInt());
-        ui->horizontalSlider_18->setValue(theModel->item(index.row(),17)->text().toInt());
-        ui->horizontalSlider_19->setValue(theModel->item(index.row(),18)->text().toInt());
-        ui->horizontalSlider_20->setValue(theModel->item(index.row(),19)->text().toInt());
-        // spinbox数值和表格数值相对应
-        ui->spinBox->setValue(theModel->item(index.row(),0)->text().toInt());
-        ui->spinBox_2->setValue(theModel->item(index.row(),1)->text().toInt());
-        ui->spinBox_3->setValue(theModel->item(index.row(),2)->text().toInt());
-        ui->spinBox_4->setValue(theModel->item(index.row(),3)->text().toInt());
-        ui->spinBox_5->setValue(theModel->item(index.row(),4)->text().toInt());
-        ui->spinBox_6->setValue(theModel->item(index.row(),5)->text().toInt());
-        ui->spinBox_7->setValue(theModel->item(index.row(),6)->text().toInt());
-        ui->spinBox_8->setValue(theModel->item(index.row(),7)->text().toInt());
-        ui->spinBox_9->setValue(theModel->item(index.row(),8)->text().toInt());
-        ui->spinBox_10->setValue(theModel->item(index.row(),9)->text().toInt());
-        ui->spinBox_11->setValue(theModel->item(index.row(),10)->text().toInt());
-        ui->spinBox_12->setValue(theModel->item(index.row(),11)->text().toInt());
-        ui->spinBox_13->setValue(theModel->item(index.row(),12)->text().toInt());
-        ui->spinBox_14->setValue(theModel->item(index.row(),13)->text().toInt());
-        ui->spinBox_15->setValue(theModel->item(index.row(),14)->text().toInt());
-        ui->spinBox_16->setValue(theModel->item(index.row(),15)->text().toInt());
-        ui->spinBox_17->setValue(theModel->item(index.row(),16)->text().toInt());
-        ui->spinBox_18->setValue(theModel->item(index.row(),17)->text().toInt());
-        ui->spinBox_19->setValue(theModel->item(index.row(),18)->text().toInt());
-        ui->spinBox_20->setValue(theModel->item(index.row(),19)->text().toInt());
+
     }else if(currentFileName != "" && ui->rbtnAdjustZero->isChecked()){
         ui->btnRecordCurFrame->setEnabled(true);
         ui->scrollArea->setEnabled(true);
         ui->btnReturnCentralValue->setEnabled(true);
+    }
+    if(currentFileName != ""){
         // 把滑块数值和表格数值相对应
         ui->horizontalSlider->setValue(theModel->item(index.row(),0)->text().toInt());
         ui->horizontalSlider_2->setValue(theModel->item(index.row(),1)->text().toInt());
@@ -680,6 +653,11 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
         ui->horizontalSlider_18->setValue(theModel->item(index.row(),17)->text().toInt());
         ui->horizontalSlider_19->setValue(theModel->item(index.row(),18)->text().toInt());
         ui->horizontalSlider_20->setValue(theModel->item(index.row(),19)->text().toInt());
+        ui->horizontalSlider_21->setValue(theModel->item(index.row(),20)->text().toInt());
+        ui->horizontalSlider_22->setValue(theModel->item(index.row(),21)->text().toInt());
+        ui->horizontalSlider_23->setValue(theModel->item(index.row(),22)->text().toInt());
+        ui->horizontalSlider_24->setValue(theModel->item(index.row(),23)->text().toInt());
+        ui->horizontalSlider_25->setValue(theModel->item(index.row(),24)->text().toInt());
         // spinbox数值和表格数值相对应
         ui->spinBox->setValue(theModel->item(index.row(),0)->text().toInt());
         ui->spinBox_2->setValue(theModel->item(index.row(),1)->text().toInt());
@@ -701,6 +679,11 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
         ui->spinBox_18->setValue(theModel->item(index.row(),17)->text().toInt());
         ui->spinBox_19->setValue(theModel->item(index.row(),18)->text().toInt());
         ui->spinBox_20->setValue(theModel->item(index.row(),19)->text().toInt());
+        ui->spinBox_21->setValue(theModel->item(index.row(),20)->text().toInt());
+        ui->spinBox_22->setValue(theModel->item(index.row(),21)->text().toInt());
+        ui->spinBox_23->setValue(theModel->item(index.row(),22)->text().toInt());
+        ui->spinBox_24->setValue(theModel->item(index.row(),23)->text().toInt());
+        ui->spinBox_25->setValue(theModel->item(index.row(),24)->text().toInt());
     }
 }
 
@@ -969,7 +952,7 @@ void MainWindow::send_horizontalSlider_Data()
             }
             QString ready_send_msg = "special_giat_data";
             ready_send_msg.append("\n");
-            ready_send_msg += QString::asprintf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
+            ready_send_msg += QString::asprintf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
                                                 (ui->horizontalSlider->value()+zeroData.at(0))/180.0*PI,
                                                 (ui->horizontalSlider_2->value()+zeroData.at(1))/180.0*PI,
                                                 (ui->horizontalSlider_3->value()+zeroData.at(2))/180.0*PI,
@@ -989,14 +972,20 @@ void MainWindow::send_horizontalSlider_Data()
                                                 (ui->horizontalSlider_17->value()+zeroData.at(16))/180.0*PI,
                                                 (ui->horizontalSlider_18->value()+zeroData.at(17))/180.0*PI,
                                                 (ui->horizontalSlider_19->value()+zeroData.at(18))/180.0*PI,
-                                                (ui->horizontalSlider_20->value()+zeroData.at(19))/180.0*PI);
+                                                (ui->horizontalSlider_20->value()+zeroData.at(19))/180.0*PI,
+                                                (ui->horizontalSlider_21->value()+zeroData.at(20))/180.0*PI,
+                                                (ui->horizontalSlider_22->value()+zeroData.at(21))/180.0*PI,
+                                                (ui->horizontalSlider_23->value()+zeroData.at(22))/180.0*PI,
+                                                (ui->horizontalSlider_24->value()+zeroData.at(23))/180.0*PI,
+                                                (ui->horizontalSlider_25->value()+zeroData.at(24))/180.0*PI
+                                                );
             ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
             QByteArray  send_msg=ready_send_msg.toUtf8();
             tcpClient->write(send_msg);
         }else if(ui->rbtnAdjustZero->isChecked()){
             QString ready_send_msg = "special_giat_data";
             ready_send_msg.append("\n");
-            ready_send_msg += QString::asprintf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
+            ready_send_msg += QString::asprintf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
                                                 (ui->horizontalSlider->value())/180.0*PI,
                                                 (ui->horizontalSlider_2->value())/180.0*PI,
                                                 (ui->horizontalSlider_3->value())/180.0*PI,
@@ -1016,7 +1005,13 @@ void MainWindow::send_horizontalSlider_Data()
                                                 (ui->horizontalSlider_17->value())/180.0*PI,
                                                 (ui->horizontalSlider_18->value())/180.0*PI,
                                                 (ui->horizontalSlider_19->value())/180.0*PI,
-                                                (ui->horizontalSlider_20->value())/180.0*PI);
+                                                (ui->horizontalSlider_20->value())/180.0*PI,
+                                                (ui->horizontalSlider_21->value())/180.0*PI,
+                                                (ui->horizontalSlider_22->value())/180.0*PI,
+                                                (ui->horizontalSlider_23->value())/180.0*PI,
+                                                (ui->horizontalSlider_24->value())/180.0*PI,
+                                                (ui->horizontalSlider_25->value())/180.0*PI
+                                                );
             ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
             QByteArray  send_msg=ready_send_msg.toUtf8();
             tcpClient->write(send_msg);
@@ -1185,6 +1180,46 @@ void MainWindow::on_horizontalSlider_20_valueChanged(int value)
 }
 
 
+void MainWindow::on_horizontalSlider_21_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    ui->spinBox_21->setValue(value);
+    send_horizontalSlider_Data();
+}
+
+
+void MainWindow::on_horizontalSlider_22_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    ui->spinBox_22->setValue(value);
+    send_horizontalSlider_Data();
+}
+
+
+void MainWindow::on_horizontalSlider_23_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    ui->spinBox_23->setValue(value);
+    send_horizontalSlider_Data();
+}
+
+
+void MainWindow::on_horizontalSlider_24_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    ui->spinBox_24->setValue(value);
+    send_horizontalSlider_Data();
+}
+
+
+void MainWindow::on_horizontalSlider_25_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    ui->spinBox_25->setValue(value);
+    send_horizontalSlider_Data();
+}
+
+
 void MainWindow::on_spinBox_valueChanged(int arg1)
 {
     QModelIndex index =  theSelection->currentIndex();
@@ -1325,6 +1360,41 @@ void MainWindow::on_spinBox_20_valueChanged(int arg1)
 }
 
 
+void MainWindow::on_spinBox_21_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    ui->horizontalSlider_21->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_22_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    ui->horizontalSlider_22->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_23_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    ui->horizontalSlider_23->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_24_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    ui->horizontalSlider_24->setValue(arg1);
+}
+
+
+void MainWindow::on_spinBox_25_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    ui->horizontalSlider_25->setValue(arg1);
+}
+
+
 void MainWindow::on_btnReturnCentralValue_clicked()
 {
     int value = QMessageBox::information(this,"提示","确定回答中央值吗？",QMessageBox::Yes,QMessageBox::No);
@@ -1349,6 +1419,11 @@ void MainWindow::on_btnReturnCentralValue_clicked()
         ui->horizontalSlider_18->setValue(0);
         ui->horizontalSlider_19->setValue(0);
         ui->horizontalSlider_20->setValue(0);
+        ui->horizontalSlider_21->setValue(0);
+        ui->horizontalSlider_22->setValue(0);
+        ui->horizontalSlider_23->setValue(0);
+        ui->horizontalSlider_24->setValue(0);
+        ui->horizontalSlider_25->setValue(0);
     }else {
         return;
     }
@@ -1379,6 +1454,11 @@ void MainWindow::on_btnRecordCurFrame_clicked()
     theModel->item(index.row(),17)->setData(ui->horizontalSlider_18->value(),Qt::DisplayRole);
     theModel->item(index.row(),18)->setData(ui->horizontalSlider_19->value(),Qt::DisplayRole);
     theModel->item(index.row(),19)->setData(ui->horizontalSlider_20->value(),Qt::DisplayRole);
+    theModel->item(index.row(),20)->setData(ui->horizontalSlider_21->value(),Qt::DisplayRole);
+    theModel->item(index.row(),21)->setData(ui->horizontalSlider_22->value(),Qt::DisplayRole);
+    theModel->item(index.row(),22)->setData(ui->horizontalSlider_23->value(),Qt::DisplayRole);
+    theModel->item(index.row(),23)->setData(ui->horizontalSlider_24->value(),Qt::DisplayRole);
+    theModel->item(index.row(),24)->setData(ui->horizontalSlider_25->value(),Qt::DisplayRole);
 }
 
 
@@ -1479,19 +1559,6 @@ void MainWindow::on_btnExecList_clicked()
                 tcpClient->waitForReadyRead(20);
                 qApp->processEvents();
             }
-//            QString ready_send_msg = "special_giat_data";
-//            ready_send_msg.append("\n");
-//            theSelection->clearSelection();
-//            theSelection->setCurrentIndex(theModel->index(i,0),QItemSelectionModel::Select);
-//            for(int j = 0; j < FixedColumnCount-1; j++){
-//                ready_send_msg += QString::asprintf("%f,",theModel->item(i,j)->text().toInt()/180.0*PI);
-//            }
-//            ready_send_msg += QString::asprintf("%f", theModel->item(i,FixedColumnCount-1)->text().toInt()/180.0*PI);
-//            ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
-//            QByteArray  send_msg=ready_send_msg.toUtf8();
-//            tcpClient->write(send_msg);
-//            tcpClient->waitForReadyRead(1000);
-//            qApp->processEvents();
         }
         theSelection->clearSelection();
         theSelection->setCurrentIndex(theModel->index(theModel->rowCount()-1,0),QItemSelectionModel::Select);
@@ -1537,7 +1604,7 @@ void MainWindow::on_newFile_triggered()
     stream << str << "\n";
     ui->plainTextEditGaitData->appendPlainText(str);
     tempstr = "zero_point";
-    QString temp_zero_point = "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
+    QString temp_zero_point = "0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0";
     str = tempstr+"\n"+temp_zero_point;
     stream << str << "\n";
     ui->plainTextEditGaitData->appendPlainText(str);
@@ -1651,4 +1718,14 @@ void MainWindow::on_rbtnAdjustGait_clicked()
 
 }
 
+
+
+void MainWindow::on_IkidRobotImage_triggered()
+{
+    if (ikidImage == NULL)
+        ikidImage = new IkidRobotImage(this);
+    ikidImage->setWindowTitle("IkidRobot");
+
+    ikidImage->show();
+}
 

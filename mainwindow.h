@@ -9,6 +9,7 @@
 #include "dialognetworkconnect.h"
 #include "sshconnectwindow.h"
 #include "packettransformer.h"
+#include "ikidrobotimage.h"
 #include <QMessageBox>
 #include <QTimer>
 #include <QLabel>
@@ -44,6 +45,8 @@ private:
     DataVisionDynamixel *datavisionDyna = NULL;
 
     DataVisionZmp *datavisionZmp = NULL;
+
+    IkidRobotImage *ikidImage = NULL;
 
     // 用来显示tableview数据
     QStandardItemModel *theModel;
@@ -155,6 +158,16 @@ private slots:
 
     void on_horizontalSlider_20_valueChanged(int value);
 
+    void on_horizontalSlider_21_valueChanged(int value);
+
+    void on_horizontalSlider_22_valueChanged(int value);
+
+    void on_horizontalSlider_23_valueChanged(int value);
+
+    void on_horizontalSlider_24_valueChanged(int value);
+
+    void on_horizontalSlider_25_valueChanged(int value);
+
     void on_spinBox_valueChanged(int arg1);
 
     void on_spinBox_2_valueChanged(int arg1);
@@ -195,6 +208,16 @@ private slots:
 
     void on_spinBox_20_valueChanged(int arg1);
 
+    void on_spinBox_21_valueChanged(int arg1);
+
+    void on_spinBox_22_valueChanged(int arg1);
+
+    void on_spinBox_23_valueChanged(int arg1);
+
+    void on_spinBox_24_valueChanged(int arg1);
+
+    void on_spinBox_25_valueChanged(int arg1);
+
     void on_btnReturnCentralValue_clicked();
 
     void on_btnRecordCurFrame_clicked();
@@ -213,6 +236,9 @@ private slots:
     void on_rbtnAdjustZero_clicked();
 
     void on_rbtnAdjustGait_clicked();
+
+
+    void on_IkidRobotImage_triggered();
 
 private:
     Ui::MainWindow *ui;
