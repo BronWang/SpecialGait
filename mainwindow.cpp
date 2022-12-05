@@ -950,7 +950,7 @@ void MainWindow::send_horizontalSlider_Data()
                 QString str = currentZeroPointList.at(i);
                 zeroData.append(str.toInt());
             }
-            QString ready_send_msg = "special_giat_data";
+            QString ready_send_msg = "special_gait_data";
             ready_send_msg.append("\n");
             ready_send_msg += QString::asprintf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
                                                 (ui->horizontalSlider->value()+zeroData.at(0))/180.0*PI,
@@ -983,7 +983,7 @@ void MainWindow::send_horizontalSlider_Data()
             QByteArray  send_msg=ready_send_msg.toUtf8();
             tcpClient->write(send_msg);
         }else if(ui->rbtnAdjustZero->isChecked()){
-            QString ready_send_msg = "special_giat_data";
+            QString ready_send_msg = "special_gait_data";
             ready_send_msg.append("\n");
             ready_send_msg += QString::asprintf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
                                                 (ui->horizontalSlider->value())/180.0*PI,
@@ -1470,7 +1470,7 @@ void MainWindow::on_btnExecPreFrame_clicked()
             QMessageBox::warning(this,"警告","当前帧为第一帧！无法执行前一帧");
             return;
         }
-        QString ready_send_msg = "special_giat_data";
+        QString ready_send_msg = "special_gait_data";
         ready_send_msg.append("\n");
         for(int i = 0; i < FixedColumnCount-1; i++){
             ready_send_msg += QString::asprintf("%f,",theModel->item(index.row()-1,i)->text().toInt()/180.0*PI);
@@ -1495,7 +1495,7 @@ void MainWindow::on_btnExecLaterFrame_clicked()
             QMessageBox::warning(this,"警告","当前帧为最后一帧！无法执行后一帧");
             return;
         }
-        QString ready_send_msg = "special_giat_data";
+        QString ready_send_msg = "special_gait_data";
         ready_send_msg.append("\n");
         for(int i = 0; i < FixedColumnCount-1; i++){
             ready_send_msg += QString::asprintf("%f,",theModel->item(index.row()+1,i)->text().toInt()/180.0*PI);
@@ -1515,7 +1515,7 @@ void MainWindow::on_btnExecLaterFrame_clicked()
 void MainWindow::on_btnResetFrame_clicked()
 {
     if(ui->checkBoxNetwork->isChecked()){
-        QString ready_send_msg = "special_giat_data";
+        QString ready_send_msg = "special_gait_data";
         ready_send_msg.append("\n");
         for(int i = 0; i < FixedColumnCount-1; i++){
             ready_send_msg += QString::asprintf("%f,",theModel->item(0,i)->text().toInt()/180.0*PI);
@@ -1547,7 +1547,7 @@ void MainWindow::on_btnExecList_clicked()
                 laterFrameDataList.append(theModel->item(i+1,j)->text().toInt());
             }
             for (int k = 1; k <= currentGaitRate; ++k) {
-                QString ready_send_msg = "special_giat_data";
+                QString ready_send_msg = "special_gait_data";
                 ready_send_msg.append("\n");
                 for(int j = 0; j < FixedColumnCount-1; j++){
                     ready_send_msg += QString::asprintf("%f,",(preFrameDataList.at(j)+((laterFrameDataList.at(j)-preFrameDataList.at(j))/(currentGaitRate*1.0)*k))/180.0*PI);
@@ -1647,6 +1647,8 @@ void MainWindow::on_newFile_triggered()
     iniModelFromStringList(fileContent);
     ui->anotherSaveFile->setEnabled(true);
     ui->btnExecList->setEnabled(true);
+    ui->rbtnAdjustGait->setEnabled(true);
+    ui->rbtnAdjustZero->setEnabled(true);
 }
 
 
