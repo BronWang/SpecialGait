@@ -9,10 +9,13 @@
 #include "dialognetworkconnect.h"
 #include "sshconnectwindow.h"
 #include "packettransformer.h"
+#include "ikidrobotimage.h"
 #include <QMessageBox>
 #include <QTimer>
 #include <QLabel>
 #include <QDebug>
+#include <QStandardItemModel>
+#include <QItemSelectionModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,7 +36,7 @@ private:
     QTcpSocket *tcpClient = NULL;  // 客户端socket
     QLabel *labelSocketState;  // 客户端socket状态标签
     QLabel *labelSeverIP;  // 服务端IP标签
-    QByteArray networkBuffer;  // 串口接收数据缓冲区
+    QByteArray networkBuffer;  // 网络接收数据缓冲区
 
     sshConnectWindow *sshConWin = NULL;  // ssh连接窗口
 
@@ -41,8 +44,22 @@ private:
 
     DataVisionDynamixel *datavisionDyna = NULL;
 
-
     DataVisionZmp *datavisionZmp = NULL;
+
+    IkidRobotImage *ikidImage = NULL;
+
+    // 用来显示tableview数据
+    QStandardItemModel *theModel;
+    QItemSelectionModel *theSelection;
+
+    //当前打开的文件名
+    QString currentFileName;
+    //存储步态零点
+    QString currentZeroPoint;
+    //存储步态数据
+    QStringList currentGaitFrames;
+    //存储步态帧率
+    int currentGaitRate=0;
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -62,6 +79,9 @@ private slots:
 
     void on_zmpTrajectory_triggered();
 
+    void on_tableCurrentChanged(const QModelIndex& current,const QModelIndex& previous);
+    void on_tableSelectionChanged(const QItemSelection& current ,const QItemSelection& previous);
+
     void onSerialPortConnect(const QString, QString);
     void sendSerialPortData();
     void onReadyRead();
@@ -69,8 +89,6 @@ private slots:
 
     void on_openFile_triggered();
     void on_saveFile_triggered();
-
-    void on_btnfilePathSensorDynaZMP_clicked();
 
     void onConnectNetwork(QString IP, quint16 port);
     void onDisConnectNetwork();
@@ -81,15 +99,151 @@ private slots:
 
     void on_btnCancelNetCon_clicked();
 
-    void on_btnSelSdzFilePath_clicked();
-
     void on_sshConnect_triggered();
 
     void on_pushButtonClearText_clicked();
 
 
+    void on_tableView_clicked(const QModelIndex &index);
+
+    void on_anotherSaveFile_triggered();
+
+
+
+    void on_btnAppendFrame_clicked();
+
+    void on_btnInsertFrame_clicked();
+
+    void on_btnDelCurFrame_clicked();
+
+    void send_horizontalSlider_Data();
+
+    void on_horizontalSlider_valueChanged(int value);
+
+    void on_horizontalSlider_2_valueChanged(int value);
+
+    void on_horizontalSlider_3_valueChanged(int value);
+
+    void on_horizontalSlider_4_valueChanged(int value);
+
+    void on_horizontalSlider_5_valueChanged(int value);
+
+    void on_horizontalSlider_6_valueChanged(int value);
+
+    void on_horizontalSlider_7_valueChanged(int value);
+
+    void on_horizontalSlider_8_valueChanged(int value);
+
+    void on_horizontalSlider_9_valueChanged(int value);
+
+    void on_horizontalSlider_10_valueChanged(int value);
+
+    void on_horizontalSlider_11_valueChanged(int value);
+
+    void on_horizontalSlider_12_valueChanged(int value);
+
+    void on_horizontalSlider_13_valueChanged(int value);
+
+    void on_horizontalSlider_14_valueChanged(int value);
+
+    void on_horizontalSlider_15_valueChanged(int value);
+
+    void on_horizontalSlider_16_valueChanged(int value);
+
+    void on_horizontalSlider_17_valueChanged(int value);
+
+    void on_horizontalSlider_18_valueChanged(int value);
+
+    void on_horizontalSlider_19_valueChanged(int value);
+
+    void on_horizontalSlider_20_valueChanged(int value);
+
+    void on_horizontalSlider_21_valueChanged(int value);
+
+    void on_horizontalSlider_22_valueChanged(int value);
+
+    void on_horizontalSlider_23_valueChanged(int value);
+
+    void on_horizontalSlider_24_valueChanged(int value);
+
+    void on_horizontalSlider_25_valueChanged(int value);
+
+    void on_spinBox_valueChanged(int arg1);
+
+    void on_spinBox_2_valueChanged(int arg1);
+
+    void on_spinBox_3_valueChanged(int arg1);
+
+    void on_spinBox_4_valueChanged(int arg1);
+
+    void on_spinBox_5_valueChanged(int arg1);
+
+    void on_spinBox_6_valueChanged(int arg1);
+
+    void on_spinBox_7_valueChanged(int arg1);
+
+    void on_spinBox_8_valueChanged(int arg1);
+
+    void on_spinBox_9_valueChanged(int arg1);
+
+    void on_spinBox_10_valueChanged(int arg1);
+
+    void on_spinBox_11_valueChanged(int arg1);
+
+    void on_spinBox_12_valueChanged(int arg1);
+
+    void on_spinBox_13_valueChanged(int arg1);
+
+    void on_spinBox_14_valueChanged(int arg1);
+
+    void on_spinBox_15_valueChanged(int arg1);
+
+    void on_spinBox_16_valueChanged(int arg1);
+
+    void on_spinBox_17_valueChanged(int arg1);
+
+    void on_spinBox_18_valueChanged(int arg1);
+
+    void on_spinBox_19_valueChanged(int arg1);
+
+    void on_spinBox_20_valueChanged(int arg1);
+
+    void on_spinBox_21_valueChanged(int arg1);
+
+    void on_spinBox_22_valueChanged(int arg1);
+
+    void on_spinBox_23_valueChanged(int arg1);
+
+    void on_spinBox_24_valueChanged(int arg1);
+
+    void on_spinBox_25_valueChanged(int arg1);
+
+    void on_btnReturnCentralValue_clicked();
+
+    void on_btnRecordCurFrame_clicked();
+
+    void on_btnExecPreFrame_clicked();
+
+    void on_btnExecLaterFrame_clicked();
+
+    void on_btnResetFrame_clicked();
+
+    void on_btnExecList_clicked();
+
+    void on_newFile_triggered();
+
+
+    void on_rbtnAdjustZero_clicked();
+
+    void on_rbtnAdjustGait_clicked();
+
+
+    void on_IkidRobotImage_triggered();
+
 private:
-    Ui::MainWindow *ui;    
+    Ui::MainWindow *ui;
+    void iniModelFromStringList(QStringList& fileContent);
+    void iniModelFromStringList_zeroPoint(QStringList& fileContent);
 
 };
 #endif // MAINWINDOW_H

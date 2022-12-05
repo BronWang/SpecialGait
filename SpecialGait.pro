@@ -18,6 +18,7 @@ SOURCES += \
     datavisionzmp.cpp \
     dialognetworkconnect.cpp \
     dialogserialport.cpp \
+    ikidrobotimage.cpp \
     main.cpp \
     mainwindow.cpp \
     packettransformer.cpp \
@@ -367,6 +368,7 @@ HEADERS += \
     def.h \
     dialognetworkconnect.h \
     dialogserialport.h \
+    ikidrobotimage.h \
     mainwindow.h \
     packettransformer.h \
     serialPacket.h \
@@ -378,6 +380,7 @@ FORMS += \
     datavisionzmp.ui \
     dialognetworkconnect.ui \
     dialogserialport.ui \
+    ikidrobotimage.ui \
     mainwindow.ui \
     sshconnectwindow.ui
 

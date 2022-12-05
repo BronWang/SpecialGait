@@ -52,5 +52,6 @@
         <file>images/open.bmp</file>
         <file>images/remove.bmp</file>
         <file>images/save.bmp</file>
+        <file>images/ikid_robot.jpg</file>
     </qresource>
 </RCC>
