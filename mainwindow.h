@@ -222,6 +222,8 @@ private slots:
 
     void on_btnRecordCurFrame_clicked();
 
+    void ExecCurrentFrame();
+
     void on_btnExecPreFrame_clicked();
 
     void on_btnExecLaterFrame_clicked();

@@ -371,6 +371,7 @@ void MainWindow::on_openFile_triggered()
     if (!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
 
+    this->setWindowTitle("SpecialGait  "+aFileName);
     QStringList fileContent;
     QTextStream stream(&aFile);
     stream.setCodec("utf-8");
@@ -419,6 +420,7 @@ void MainWindow::on_saveFile_triggered()
         //帧率不能为空
         QString ratestr = ui->lineEditGaitRate->text();
         if(ratestr.isEmpty()) ratestr = "30";
+        currentGaitRate = ratestr.toInt();
         str = tempstr+"\n"+ratestr;
         stream << str << "\n";
         ui->plainTextEditGaitData->appendPlainText(str);
@@ -459,6 +461,7 @@ void MainWindow::on_saveFile_triggered()
         //帧率不能为空
         QString ratestr = ui->lineEditGaitRate->text();
         if(ratestr.isEmpty()) ratestr = "30";
+        currentGaitRate = ratestr.toInt();
         str = tempstr+"\n"+ratestr;
         stream << str << "\n";
         ui->plainTextEditGaitData->appendPlainText(str);
@@ -633,6 +636,33 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
     }
     if(currentFileName != ""){
         // 把滑块数值和表格数值相对应
+        const QSignalBlocker blocker(ui->horizontalSlider);
+        const QSignalBlocker blocker2(ui->horizontalSlider_2);
+        const QSignalBlocker blocker3(ui->horizontalSlider_3);
+        const QSignalBlocker blocker4(ui->horizontalSlider_4);
+        const QSignalBlocker blocker5(ui->horizontalSlider_5);
+        const QSignalBlocker blocker6(ui->horizontalSlider_6);
+        const QSignalBlocker blocker7(ui->horizontalSlider_7);
+        const QSignalBlocker blocker8(ui->horizontalSlider_8);
+        const QSignalBlocker blocker9(ui->horizontalSlider_9);
+        const QSignalBlocker blocker10(ui->horizontalSlider_10);
+        const QSignalBlocker blocker11(ui->horizontalSlider_11);
+        const QSignalBlocker blocker12(ui->horizontalSlider_12);
+        const QSignalBlocker blocker13(ui->horizontalSlider_13);
+        const QSignalBlocker blocker14(ui->horizontalSlider_14);
+        const QSignalBlocker blocker15(ui->horizontalSlider_15);
+        const QSignalBlocker blocker16(ui->horizontalSlider_16);
+        const QSignalBlocker blocker17(ui->horizontalSlider_17);
+        const QSignalBlocker blocker18(ui->horizontalSlider_18);
+        const QSignalBlocker blocker19(ui->horizontalSlider_19);
+        const QSignalBlocker blocker20(ui->horizontalSlider_20);
+        const QSignalBlocker blocker21(ui->horizontalSlider_21);
+        const QSignalBlocker blocker22(ui->horizontalSlider_22);
+        const QSignalBlocker blocker23(ui->horizontalSlider_23);
+        const QSignalBlocker blocker24(ui->horizontalSlider_24);
+        const QSignalBlocker blocker25(ui->horizontalSlider_25);
+
+        ExecCurrentFrame();
         ui->horizontalSlider->setValue(theModel->item(index.row(),0)->text().toInt());
         ui->horizontalSlider_2->setValue(theModel->item(index.row(),1)->text().toInt());
         ui->horizontalSlider_3->setValue(theModel->item(index.row(),2)->text().toInt());
@@ -1461,6 +1491,22 @@ void MainWindow::on_btnRecordCurFrame_clicked()
     theModel->item(index.row(),24)->setData(ui->horizontalSlider_25->value(),Qt::DisplayRole);
 }
 
+void MainWindow::ExecCurrentFrame()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        QModelIndex index = theSelection->currentIndex();
+        QString ready_send_msg = "special_gait_data";
+        ready_send_msg.append("\n");
+        for(int i = 0; i < FixedColumnCount-1; i++){
+            ready_send_msg += QString::asprintf("%f,",theModel->item(index.row(),i)->text().toInt()/180.0*PI);
+        }
+        ready_send_msg += QString::asprintf("%f", theModel->item(index.row(),FixedColumnCount-1)->text().toInt()/180.0*PI);
+        ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
+        QByteArray  send_msg=ready_send_msg.toUtf8();
+        tcpClient->write(send_msg);
+    }
+}
+
 
 void MainWindow::on_btnExecPreFrame_clicked()
 {
@@ -1630,6 +1676,7 @@ void MainWindow::on_newFile_triggered()
         return;
     if (!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
         return;
+    this->setWindowTitle("SpecialGait  "+aFileName);
     QStringList fileContent;
     QTextStream newStream(&aFile);
     newStream.setCodec("utf-8");

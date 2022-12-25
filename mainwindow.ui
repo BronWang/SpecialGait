@@ -146,7 +146,7 @@
           <property name="geometry">
            <rect>
             <x>0</x>
-            <y>-482</y>
+            <y>0</y>
             <width>464</width>
             <height>742</height>
            </rect>
@@ -156,6 +156,9 @@
             <layout class="QGridLayout" name="gridLayout_2">
              <item row="4" column="2">
               <widget class="QSpinBox" name="spinBox_5">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -204,6 +207,9 @@
              </item>
              <item row="3" column="2">
               <widget class="QSpinBox" name="spinBox_4">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -342,6 +348,9 @@
              </item>
              <item row="12" column="2">
               <widget class="QSpinBox" name="spinBox_13">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -392,6 +401,9 @@
              </item>
              <item row="9" column="2">
               <widget class="QSpinBox" name="spinBox_10">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -428,6 +440,9 @@
              </item>
              <item row="10" column="2">
               <widget class="QSpinBox" name="spinBox_11">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -438,6 +453,9 @@
              </item>
              <item row="5" column="2">
               <widget class="QSpinBox" name="spinBox_6">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -490,6 +508,9 @@
              </item>
              <item row="18" column="2">
               <widget class="QSpinBox" name="spinBox_19">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -540,6 +561,9 @@
              </item>
              <item row="16" column="2">
               <widget class="QSpinBox" name="spinBox_17">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -602,6 +626,9 @@
              </item>
              <item row="15" column="2">
               <widget class="QSpinBox" name="spinBox_16">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -612,6 +639,9 @@
              </item>
              <item row="14" column="2">
               <widget class="QSpinBox" name="spinBox_15">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -629,6 +659,9 @@
              </item>
              <item row="0" column="2">
               <widget class="QSpinBox" name="spinBox">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -653,6 +686,9 @@
              </item>
              <item row="11" column="2">
               <widget class="QSpinBox" name="spinBox_12">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -663,6 +699,9 @@
              </item>
              <item row="8" column="2">
               <widget class="QSpinBox" name="spinBox_9">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -699,6 +738,9 @@
              </item>
              <item row="7" column="2">
               <widget class="QSpinBox" name="spinBox_8">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -754,6 +796,9 @@
              </item>
              <item row="13" column="2">
               <widget class="QSpinBox" name="spinBox_14">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -802,6 +847,9 @@
              </item>
              <item row="1" column="2">
               <widget class="QSpinBox" name="spinBox_2">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -819,6 +867,9 @@
              </item>
              <item row="6" column="2">
               <widget class="QSpinBox" name="spinBox_7">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -829,6 +880,9 @@
              </item>
              <item row="17" column="2">
               <widget class="QSpinBox" name="spinBox_18">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -858,6 +912,9 @@
              </item>
              <item row="2" column="2">
               <widget class="QSpinBox" name="spinBox_3">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -944,6 +1001,9 @@
              </item>
              <item row="19" column="2">
               <widget class="QSpinBox" name="spinBox_20">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -1018,6 +1078,9 @@
              </item>
              <item row="20" column="2">
               <widget class="QSpinBox" name="spinBox_21">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -1028,6 +1091,9 @@
              </item>
              <item row="21" column="2">
               <widget class="QSpinBox" name="spinBox_22">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -1038,6 +1104,9 @@
              </item>
              <item row="22" column="2">
               <widget class="QSpinBox" name="spinBox_23">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -1048,6 +1117,9 @@
              </item>
              <item row="23" column="2">
               <widget class="QSpinBox" name="spinBox_24">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
@@ -1058,6 +1130,9 @@
              </item>
              <item row="24" column="2">
               <widget class="QSpinBox" name="spinBox_25">
+               <property name="keyboardTracking">
+                <bool>false</bool>
+               </property>
                <property name="minimum">
                 <number>-180</number>
                </property>
