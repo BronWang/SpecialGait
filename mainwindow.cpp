@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QFileDialog>
 #define FixedColumnCount 25
+#define FrameRateColumn 25
 #define PI 3.1415926
 
 
@@ -42,7 +43,8 @@ MainWindow::MainWindow(QWidget *parent)
     ui->statusbar->addWidget(labelSeverIP);
 
     //tableview部分
-    theModel = new QStandardItemModel(5, FixedColumnCount, this);
+    theModel = new QStandardItemModel(5, FixedColumnCount+1, this);
+    theModel->setHeaderData(FrameRateColumn,Qt::Horizontal,"帧率");  // 对帧数列单独处理
     theSelection = new QItemSelectionModel(theModel);
     ui->tableView->setModel(theModel);
     ui->tableView->setSelectionModel(theSelection);
@@ -688,6 +690,7 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
         ui->horizontalSlider_23->setValue(theModel->item(index.row(),22)->text().toInt());
         ui->horizontalSlider_24->setValue(theModel->item(index.row(),23)->text().toInt());
         ui->horizontalSlider_25->setValue(theModel->item(index.row(),24)->text().toInt());
+        ui->horizontalSlider_26->setValue(theModel->item(index.row(),25)->text().toInt());
         // spinbox数值和表格数值相对应
         ui->spinBox->setValue(theModel->item(index.row(),0)->text().toInt());
         ui->spinBox_2->setValue(theModel->item(index.row(),1)->text().toInt());
@@ -714,6 +717,7 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
         ui->spinBox_23->setValue(theModel->item(index.row(),22)->text().toInt());
         ui->spinBox_24->setValue(theModel->item(index.row(),23)->text().toInt());
         ui->spinBox_25->setValue(theModel->item(index.row(),24)->text().toInt());
+        ui->spinBox_26->setValue(theModel->item(index.row(),25)->text().toInt());
     }
 }
 
@@ -765,6 +769,9 @@ void MainWindow::iniModelFromStringList(QStringList &fileContent)
             QStandardItem *item = new QStandardItem(gait_frame_list.at(j));
             theModel->setItem(i-9,j,item);
         }
+        // 单独处理步态帧列
+        QStandardItem *frameItem = new QStandardItem(gait_frame_list.at(FrameRateColumn));
+        theModel->setItem(i-9,FrameRateColumn,frameItem);
     }
 
 }
@@ -808,7 +815,8 @@ void MainWindow::iniModelFromStringList_zeroPoint(QStringList &fileContent)
         QStandardItem *item = new QStandardItem(zero_point_list.at(i));
         theModel->setItem(0,i,item);
     }
-
+    QStandardItem *item = new QStandardItem("1"); // 单独添加帧数列，防止报错
+    theModel->setItem(0,FrameRateColumn,item);
 }
 
 
@@ -928,7 +936,7 @@ void MainWindow::on_btnAppendFrame_clicked()
     QList<QStandardItem*> itemList;
     QStandardItem *item;
     QStandardItem *newItem;
-    for (int i = 0; i < FixedColumnCount; ++i) {
+    for (int i = 0; i < theModel->columnCount(); ++i) { // 加1是因为还有帧率列
         item = theModel->item(theModel->rowCount()-1,i);
         newItem = new QStandardItem(item->text());
         itemList<<newItem;
@@ -945,7 +953,7 @@ void MainWindow::on_btnInsertFrame_clicked()
     QList<QStandardItem*> itemList;
     QStandardItem *item;
     QStandardItem *newItem;
-    for (int i = 0; i < FixedColumnCount; ++i) {
+    for (int i = 0; i < theModel->columnCount(); ++i) {
         item = theModel->item(theSelection->currentIndex().row(),i);
         newItem = new QStandardItem(item->text());
         itemList<<newItem;
@@ -1012,6 +1020,7 @@ void MainWindow::send_horizontalSlider_Data()
             ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
             QByteArray  send_msg=ready_send_msg.toUtf8();
             tcpClient->write(send_msg);
+            tcpClient->waitForBytesWritten(5);
         }else if(ui->rbtnAdjustZero->isChecked()){
             QString ready_send_msg = "special_gait_data";
             ready_send_msg.append("\n");
@@ -1045,6 +1054,7 @@ void MainWindow::send_horizontalSlider_Data()
             ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
             QByteArray  send_msg=ready_send_msg.toUtf8();
             tcpClient->write(send_msg);
+            tcpClient->waitForBytesWritten(5);
         }
     }
 }
@@ -1249,6 +1259,11 @@ void MainWindow::on_horizontalSlider_25_valueChanged(int value)
     send_horizontalSlider_Data();
 }
 
+void MainWindow::on_horizontalSlider_26_valueChanged(int value)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    ui->spinBox_26->setValue(value);
+}
 
 void MainWindow::on_spinBox_valueChanged(int arg1)
 {
@@ -1424,6 +1439,12 @@ void MainWindow::on_spinBox_25_valueChanged(int arg1)
     ui->horizontalSlider_25->setValue(arg1);
 }
 
+void MainWindow::on_spinBox_26_valueChanged(int arg1)
+{
+    QModelIndex index =  theSelection->currentIndex();
+    ui->horizontalSlider_26->setValue(arg1);
+}
+
 
 void MainWindow::on_btnReturnCentralValue_clicked()
 {
@@ -1489,18 +1510,25 @@ void MainWindow::on_btnRecordCurFrame_clicked()
     theModel->item(index.row(),22)->setData(ui->horizontalSlider_23->value(),Qt::DisplayRole);
     theModel->item(index.row(),23)->setData(ui->horizontalSlider_24->value(),Qt::DisplayRole);
     theModel->item(index.row(),24)->setData(ui->horizontalSlider_25->value(),Qt::DisplayRole);
+    theModel->item(index.row(),25)->setData(ui->horizontalSlider_26->value(),Qt::DisplayRole);
 }
 
 void MainWindow::ExecCurrentFrame()
 {
     if(ui->checkBoxNetwork->isChecked()){
         QModelIndex index = theSelection->currentIndex();
+        QStringList currentZeroPointList = currentZeroPoint.split(",",QString::SkipEmptyParts);
+        QList<int> zeroData;
+        for (int i = 0; i < currentZeroPointList.count(); ++i) {
+            QString str = currentZeroPointList.at(i);
+            zeroData.append(str.toInt());
+        }
         QString ready_send_msg = "special_gait_data";
         ready_send_msg.append("\n");
         for(int i = 0; i < FixedColumnCount-1; i++){
-            ready_send_msg += QString::asprintf("%f,",theModel->item(index.row(),i)->text().toInt()/180.0*PI);
+            ready_send_msg += QString::asprintf("%f,",(theModel->item(index.row(),i)->text().toInt()+zeroData.at(i))/180.0*PI);
         }
-        ready_send_msg += QString::asprintf("%f", theModel->item(index.row(),FixedColumnCount-1)->text().toInt()/180.0*PI);
+        ready_send_msg += QString::asprintf("%f", (theModel->item(index.row(),FixedColumnCount-1)->text().toInt()+zeroData.at(FixedColumnCount-1))/180.0*PI);
         ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
         QByteArray  send_msg=ready_send_msg.toUtf8();
         tcpClient->write(send_msg);
@@ -1516,12 +1544,18 @@ void MainWindow::on_btnExecPreFrame_clicked()
             QMessageBox::warning(this,"警告","当前帧为第一帧！无法执行前一帧");
             return;
         }
+        QStringList currentZeroPointList = currentZeroPoint.split(",",QString::SkipEmptyParts);
+        QList<int> zeroData;
+        for (int i = 0; i < currentZeroPointList.count(); ++i) {
+            QString str = currentZeroPointList.at(i);
+            zeroData.append(str.toInt());
+        }
         QString ready_send_msg = "special_gait_data";
         ready_send_msg.append("\n");
         for(int i = 0; i < FixedColumnCount-1; i++){
-            ready_send_msg += QString::asprintf("%f,",theModel->item(index.row()-1,i)->text().toInt()/180.0*PI);
+            ready_send_msg += QString::asprintf("%f,",(theModel->item(index.row()-1,i)->text().toInt()+zeroData.at(i))/180.0*PI);
         }
-        ready_send_msg += QString::asprintf("%f", theModel->item(index.row()-1,FixedColumnCount-1)->text().toInt()/180.0*PI);
+        ready_send_msg += QString::asprintf("%f", (theModel->item(index.row()-1,FixedColumnCount-1)->text().toInt()+zeroData.at(FixedColumnCount-1))/180.0*PI);
         ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
         QByteArray  send_msg=ready_send_msg.toUtf8();
         tcpClient->write(send_msg);
@@ -1541,12 +1575,18 @@ void MainWindow::on_btnExecLaterFrame_clicked()
             QMessageBox::warning(this,"警告","当前帧为最后一帧！无法执行后一帧");
             return;
         }
+        QStringList currentZeroPointList = currentZeroPoint.split(",",QString::SkipEmptyParts);
+        QList<int> zeroData;
+        for (int i = 0; i < currentZeroPointList.count(); ++i) {
+            QString str = currentZeroPointList.at(i);
+            zeroData.append(str.toInt());
+        }
         QString ready_send_msg = "special_gait_data";
         ready_send_msg.append("\n");
         for(int i = 0; i < FixedColumnCount-1; i++){
-            ready_send_msg += QString::asprintf("%f,",theModel->item(index.row()+1,i)->text().toInt()/180.0*PI);
+            ready_send_msg += QString::asprintf("%f,",(theModel->item(index.row()+1,i)->text().toInt()+zeroData.at(i))/180.0*PI);
         }
-        ready_send_msg += QString::asprintf("%f", theModel->item(index.row()+1,FixedColumnCount-1)->text().toInt()/180.0*PI);
+        ready_send_msg += QString::asprintf("%f", (theModel->item(index.row()+1,FixedColumnCount-1)->text().toInt()+zeroData.at(FixedColumnCount-1))/180.0*PI);
         ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
         QByteArray  send_msg=ready_send_msg.toUtf8();
         tcpClient->write(send_msg);
@@ -1561,12 +1601,18 @@ void MainWindow::on_btnExecLaterFrame_clicked()
 void MainWindow::on_btnResetFrame_clicked()
 {
     if(ui->checkBoxNetwork->isChecked()){
+        QStringList currentZeroPointList = currentZeroPoint.split(",",QString::SkipEmptyParts);
+        QList<int> zeroData;
+        for (int i = 0; i < currentZeroPointList.count(); ++i) {
+            QString str = currentZeroPointList.at(i);
+            zeroData.append(str.toInt());
+        }
         QString ready_send_msg = "special_gait_data";
         ready_send_msg.append("\n");
         for(int i = 0; i < FixedColumnCount-1; i++){
-            ready_send_msg += QString::asprintf("%f,",theModel->item(0,i)->text().toInt()/180.0*PI);
+            ready_send_msg += QString::asprintf("%f,",(theModel->item(0,i)->text().toInt()+zeroData.at(i))/180.0*PI);
         }
-        ready_send_msg += QString::asprintf("%f", theModel->item(0,FixedColumnCount-1)->text().toInt()/180.0*PI);
+        ready_send_msg += QString::asprintf("%f", (theModel->item(0,FixedColumnCount-1)->text().toInt()+zeroData.at(FixedColumnCount-1))/180.0*PI);
         ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
         QByteArray  send_msg=ready_send_msg.toUtf8();
         tcpClient->write(send_msg);
@@ -1583,22 +1629,29 @@ void MainWindow::on_btnExecList_clicked()
     if(ui->checkBoxNetwork->isChecked()){
         //关键帧之间均值插值
         ui->btnExecList->setEnabled(false);
-        for (int i = 0; i < theModel->rowCount()-1; ++i) {
+        QStringList currentZeroPointList = currentZeroPoint.split(",",QString::SkipEmptyParts);
+        QList<int> zeroData;
+        for (int i = 0; i < currentZeroPointList.count(); ++i) {
+            QString str = currentZeroPointList.at(i);
+            zeroData.append(str.toInt());
+        }
+        for (int i = 1; i < theModel->rowCount(); ++i) {
             theSelection->clearSelection();
             theSelection->setCurrentIndex(theModel->index(i,0),QItemSelectionModel::Select);
             QList<int> preFrameDataList;
             QList<int> laterFrameDataList;
             for(int j = 0; j < FixedColumnCount; j++){
-                preFrameDataList.append(theModel->item(i,j)->text().toInt());
-                laterFrameDataList.append(theModel->item(i+1,j)->text().toInt());
+                preFrameDataList.append(theModel->item(i-1,j)->text().toInt());
+                laterFrameDataList.append(theModel->item(i,j)->text().toInt());
             }
-            for (int k = 1; k <= currentGaitRate; ++k) {
+            int tempRate = theModel->item(i,FrameRateColumn)->text().toInt();  //当前帧的帧率
+            for (int k = 1; k <= tempRate; ++k) {
                 QString ready_send_msg = "special_gait_data";
                 ready_send_msg.append("\n");
                 for(int j = 0; j < FixedColumnCount-1; j++){
-                    ready_send_msg += QString::asprintf("%f,",(preFrameDataList.at(j)+((laterFrameDataList.at(j)-preFrameDataList.at(j))/(currentGaitRate*1.0)*k))/180.0*PI);
+                    ready_send_msg += QString::asprintf("%f,",((preFrameDataList.at(j)+((laterFrameDataList.at(j)-preFrameDataList.at(j))/(tempRate*1.0)*k))+zeroData.at(j))/180.0*PI);
                 }
-                ready_send_msg += QString::asprintf("%f", (preFrameDataList.at(FixedColumnCount-1)+((laterFrameDataList.at(FixedColumnCount-1)-preFrameDataList.at(FixedColumnCount-1))/(currentGaitRate*1.0)*k))/180.0*PI);
+                ready_send_msg += QString::asprintf("%f", ((preFrameDataList.at(FixedColumnCount-1)+((laterFrameDataList.at(FixedColumnCount-1)-preFrameDataList.at(FixedColumnCount-1))/(tempRate*1.0)*k))+zeroData.at(FixedColumnCount-1))/180.0*PI);
                 ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
                 QByteArray  send_msg=ready_send_msg.toUtf8();
                 tcpClient->write(send_msg);
@@ -1662,6 +1715,7 @@ void MainWindow::on_newFile_triggered()
         str = str + "0,";
     }
     str.append("0");
+    str.append(",30"); //单独处理步态帧列
     stream << str << "\n";
     ui->plainTextEditGaitData->appendPlainText(str);
 
@@ -1777,4 +1831,92 @@ void MainWindow::on_IkidRobotImage_triggered()
 
     ikidImage->show();
 }
+
+
+void MainWindow::on_gaitUpload_triggered()
+{
+    if (gaitUpload == NULL){
+        gaitUpload = new GaitUpload(this);;
+        gaitUpload->setWindowTitle("文件上传");
+        // 功能细节
+        connect(gaitUpload, SIGNAL(startFileUpload()), this, SLOT(onStartFileUpload()));
+        connect(this, SIGNAL(gaitDataUploadProcess(int,int)), gaitUpload, SLOT(displayProcessBar(int, int)));
+        connect(this, SIGNAL(clearGaitDataUploadProcessBar()), gaitUpload, SLOT(clearProcessBar()));
+    }
+    gaitUpload->show();
+    emit clearGaitDataUploadProcessBar();
+}
+
+void MainWindow::onStartFileUpload()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        on_saveFile_triggered(); // 先保存当前文件
+        QString ready_send_msg = "start_write_gait_txt";
+        ready_send_msg.append("\n");
+        if(ui->lineEditGaitID->text() == "") return;
+        if(currentFileName.isEmpty()) return;
+        ready_send_msg += ui->lineEditGaitID->text();
+        ready_send_msg.append("\n");
+        QByteArray  send_msg=ready_send_msg.toUtf8();
+        int ret = -1;
+        ret = tcpClient->write(send_msg);
+        if(ret == -1){
+            QMessageBox::warning(this,"失败","文件已上传失败，客户端报错或网络连接已断开!");
+            emit clearGaitDataUploadProcessBar();
+            return;
+        }
+        bool flag = false;
+        flag = tcpClient->waitForBytesWritten(5);  // 防止粘包
+
+        qApp->processEvents();
+        if(!flag){
+            QMessageBox::warning(this,"失败","文件已上传超时!");
+            emit clearGaitDataUploadProcessBar();
+            return;
+        }
+
+        QString aFileName = currentFileName;
+        if (aFileName.isEmpty())
+            return;
+        QFile   aFile(aFileName);
+        aFile.setFileName(aFileName);
+        if (!aFile.exists()) //文件不存在
+            return;
+        if (!aFile.open(QIODevice::ReadOnly | QIODevice::Text))
+            return;
+        QTextStream newStream(&aFile);
+        newStream.setCodec("utf-8");
+        int count = 0;
+        while(!newStream.atEnd()){
+            QString str = newStream.readLine();
+            count++;
+            ready_send_msg = "gait_txt_data";
+            ready_send_msg.append("\n");
+            ready_send_msg.append(str);
+            ready_send_msg.append("\n");
+            send_msg = ready_send_msg.toUtf8();
+            ret = tcpClient->write(send_msg);
+            if(ret == -1){
+                QMessageBox::warning(this,"失败","文件已上传失败，客户端报错或网络连接已断开!请重新启动客户端节点!");
+                emit clearGaitDataUploadProcessBar();
+                return;
+            }
+            flag = tcpClient->waitForBytesWritten(5);
+            qApp->processEvents();
+            if(!flag){
+                QMessageBox::warning(this,"失败","文件已上传超时!");
+                emit clearGaitDataUploadProcessBar();
+                return;
+            }
+            emit gaitDataUploadProcess(count, theModel->rowCount()+9);
+        }
+        aFile.close();
+        QMessageBox::information(this,"成功","文件已上传完毕");
+
+
+    }else {
+        QMessageBox::information(this,"提示","请先连接网络！");
+    }
+}
+
 

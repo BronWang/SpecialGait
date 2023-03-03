@@ -9,3 +9,11 @@ Special Gait debug software built by Qt, which is used to debug the special gait
 2. 修复了改变步态帧率时，其不会实时起作用的问题
 3. 把spinbox改为了不追踪数值变化的模式
 4. 优化了软件操作性
+
+# SpecialGait v1.2.0
+做了以下更新：
+1. 添加了帧率列，关键帧之间的插帧数可调，主界面右边栏的步态帧率设置目前不再起作用
+2. 软件增加了步态文件上传功能，接收服务端在IKID_WS项目中
+3. 优化了软件的高亮显示
+4. 添加了文件上传报错信息输出
+

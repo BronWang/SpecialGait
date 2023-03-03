@@ -10,6 +10,7 @@
 #include "sshconnectwindow.h"
 #include "packettransformer.h"
 #include "ikidrobotimage.h"
+#include "gaitupload.h"
 #include <QMessageBox>
 #include <QTimer>
 #include <QLabel>
@@ -47,6 +48,8 @@ private:
     DataVisionZmp *datavisionZmp = NULL;
 
     IkidRobotImage *ikidImage = NULL;
+
+    GaitUpload *gaitUpload = NULL;
 
     // 用来显示tableview数据
     QStandardItemModel *theModel;
@@ -168,6 +171,8 @@ private slots:
 
     void on_horizontalSlider_25_valueChanged(int value);
 
+    void on_horizontalSlider_26_valueChanged(int value);
+
     void on_spinBox_valueChanged(int arg1);
 
     void on_spinBox_2_valueChanged(int arg1);
@@ -218,6 +223,8 @@ private slots:
 
     void on_spinBox_25_valueChanged(int arg1);
 
+    void on_spinBox_26_valueChanged(int arg1);
+
     void on_btnReturnCentralValue_clicked();
 
     void on_btnRecordCurFrame_clicked();
@@ -242,10 +249,17 @@ private slots:
 
     void on_IkidRobotImage_triggered();
 
+    void on_gaitUpload_triggered();
+
+    void onStartFileUpload();
+
 private:
     Ui::MainWindow *ui;
     void iniModelFromStringList(QStringList& fileContent);
     void iniModelFromStringList_zeroPoint(QStringList& fileContent);
+signals:
+    void gaitDataUploadProcess(int cur, int total);
+    void clearGaitDataUploadProcessBar();
 
 };
 #endif // MAINWINDOW_H
