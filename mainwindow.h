@@ -11,6 +11,7 @@
 #include "packettransformer.h"
 #include "ikidrobotimage.h"
 #include "gaitupload.h"
+#include "walkdebug.h"
 #include <QMessageBox>
 #include <QTimer>
 #include <QLabel>
@@ -50,6 +51,8 @@ private:
     IkidRobotImage *ikidImage = NULL;
 
     GaitUpload *gaitUpload = NULL;
+
+    WalkDebug *walkDebug = NULL;
 
     // 用来显示tableview数据
     QStandardItemModel *theModel;
@@ -252,6 +255,15 @@ private slots:
     void on_gaitUpload_triggered();
 
     void onStartFileUpload();
+
+    void on_walkDebug_triggered();
+
+    void onCmd_walk_start_walk();
+    void onCmd_walk_forward();
+    void onCmd_walk_left();
+    void onCmd_walk_right();
+    void onCmd_walk_stop();
+    void onCmd_walk_end_walk();
 
 private:
     Ui::MainWindow *ui;

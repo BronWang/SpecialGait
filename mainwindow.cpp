@@ -1929,3 +1929,116 @@ void MainWindow::onStartFileUpload()
 }
 
 
+
+void MainWindow::on_walkDebug_triggered()
+{
+    if (walkDebug == NULL){
+        walkDebug = new WalkDebug(this);
+        walkDebug->setWindowTitle("walk debug");
+        // 功能细节
+        connect(walkDebug, SIGNAL(cmd_walk_start_walk()), this, SLOT(onCmd_walk_start_walk()));
+        connect(walkDebug, SIGNAL(cmd_walk_forward()), this, SLOT(onCmd_walk_forward()));
+        connect(walkDebug, SIGNAL(cmd_walk_left()), this, SLOT(onCmd_walk_left()));
+        connect(walkDebug, SIGNAL(cmd_walk_right()), this, SLOT(onCmd_walk_right()));
+        connect(walkDebug, SIGNAL(cmd_walk_stop()), this, SLOT(onCmd_walk_stop()));
+        connect(walkDebug, SIGNAL(cmd_walk_end_walk()), this, SLOT(onCmd_walk_end_walk()));
+    }
+    walkDebug->setWindowModality(Qt::ApplicationModal);
+    walkDebug->show();
+
+}
+
+void MainWindow::onCmd_walk_start_walk()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        QString ready_send_msg = "cmd_walk_start_walk";
+        ready_send_msg.append("\n");
+        QByteArray  send_msg=ready_send_msg.toUtf8();
+        int ret = -1;
+        ret = tcpClient->write(send_msg);
+        if(ret == -1){
+            QMessageBox::warning(this,"失败","start_walk 启动失败，客户端报错或网络连接已断开!");
+            return;
+        }
+    }else {
+        QMessageBox::information(this,"提示","请先连接网络！");
+    }
+}
+
+void MainWindow::onCmd_walk_forward()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        QString ready_send_msg = "cmd_walk_forward";
+        ready_send_msg.append("\n");
+        QByteArray  send_msg=ready_send_msg.toUtf8();
+        int ret = -1;
+        ret = tcpClient->write(send_msg);
+        if(ret == -1){
+            QMessageBox::warning(this,"失败","walk_forward 启动失败，客户端报错或网络连接已断开!");
+            return;
+        }
+    }else {
+        QMessageBox::information(this,"提示","请先连接网络！");
+    }
+}
+
+void MainWindow::onCmd_walk_left()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        QString ready_send_msg = "cmd_walk_left";
+        ready_send_msg.append("\n");
+        QByteArray  send_msg=ready_send_msg.toUtf8();
+        int ret = -1;
+        ret = tcpClient->write(send_msg);
+        if(ret == -1){
+            QMessageBox::warning(this,"失败","walk_left 启动失败，客户端报错或网络连接已断开!");
+            return;
+        }
+    }else {
+        QMessageBox::information(this,"提示","请先连接网络！");
+    }
+}
+
+void MainWindow::onCmd_walk_right()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        QString ready_send_msg = "cmd_walk_right";
+        ready_send_msg.append("\n");
+        QByteArray  send_msg=ready_send_msg.toUtf8();
+        int ret = -1;
+        ret = tcpClient->write(send_msg);
+        if(ret == -1){
+            QMessageBox::warning(this,"失败","walk_right 启动失败，客户端报错或网络连接已断开!");
+            return;
+        }
+    }else {
+        QMessageBox::information(this,"提示","请先连接网络！");
+    }
+}
+
+void MainWindow::onCmd_walk_stop()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        QString ready_send_msg = "cmd_walk_stop";
+        ready_send_msg.append("\n");
+        QByteArray  send_msg=ready_send_msg.toUtf8();
+        int ret = -1;
+        ret = tcpClient->write(send_msg);
+        if(ret == -1){
+            QMessageBox::warning(this,"失败","walk_stop 启动失败，客户端报错或网络连接已断开!");
+            return;
+        }
+    }else {
+        QMessageBox::information(this,"提示","请先连接网络！");
+    }
+}
+
+void MainWindow::onCmd_walk_end_walk()
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        return;
+    }else {
+        QMessageBox::information(this,"提示","请先连接网络！");
+    }
+}
+

@@ -23,7 +23,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     packettransformer.cpp \
-    sshconnectwindow.cpp
+    sshconnectwindow.cpp \
+    walkdebug.cpp
 
 HEADERS += \
     Eigen/Cholesky \
@@ -374,7 +375,8 @@ HEADERS += \
     mainwindow.h \
     packettransformer.h \
     serialPacket.h \
-    sshconnectwindow.h
+    sshconnectwindow.h \
+    walkdebug.h
 
 FORMS += \
     datavisiondynamixel.ui \
@@ -385,7 +387,8 @@ FORMS += \
     gaitupload.ui \
     ikidrobotimage.ui \
     mainwindow.ui \
-    sshconnectwindow.ui
+    sshconnectwindow.ui \
+    walkdebug.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

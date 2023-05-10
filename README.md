@@ -23,5 +23,6 @@ Special Gait debug software built by Qt, which is used to debug the special gait
 2. 修复了零点调试时与自身数值叠加输出的bug
 
 # 2023/5/10
-1. 英文界面
+1. 英文主界面
+2. 添加机器人步行调试功能
 

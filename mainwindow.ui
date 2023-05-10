@@ -1393,6 +1393,7 @@
     <addaction name="networkCom"/>
     <addaction name="gaitUpload"/>
     <addaction name="sshConnect"/>
+    <addaction name="walkDebug"/>
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
@@ -1429,6 +1430,7 @@
    <addaction name="networkCom"/>
    <addaction name="gaitUpload"/>
    <addaction name="sshConnect"/>
+   <addaction name="walkDebug"/>
    <addaction name="separator"/>
    <addaction name="exit"/>
    <addaction name="separator"/>
@@ -1551,6 +1553,15 @@
    </property>
    <property name="text">
     <string>File Upload</string>
+   </property>
+  </action>
+  <action name="walkDebug">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/images/images/804.bmp</normaloff>:/images/images/804.bmp</iconset>
+   </property>
+   <property name="text">
+    <string>walkDebug</string>
    </property>
   </action>
  </widget>
