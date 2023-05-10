@@ -35,9 +35,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->rbtnAdjustGait->setEnabled(false);
     ui->rbtnAdjustZero->setEnabled(false);
 
-    labelSocketState = new QLabel("Socket状态：");
+    labelSocketState = new QLabel("Socket status：");
     labelSocketState->setMinimumWidth(250);
-    labelSeverIP = new QLabel("服务端IP：");
+    labelSeverIP = new QLabel("Server IP：");
     labelSeverIP->setMinimumWidth(250);
     ui->statusbar->addWidget(labelSocketState);
     ui->statusbar->addWidget(labelSeverIP);
@@ -1525,10 +1525,17 @@ void MainWindow::ExecCurrentFrame()
         }
         QString ready_send_msg = "special_gait_data";
         ready_send_msg.append("\n");
-        for(int i = 0; i < FixedColumnCount-1; i++){
-            ready_send_msg += QString::asprintf("%f,",(theModel->item(index.row(),i)->text().toInt()+zeroData.at(i))/180.0*PI);
+        if(ui->rbtnAdjustZero->isChecked()){
+            for(int i = 0; i < FixedColumnCount-1; i++){
+                ready_send_msg += QString::asprintf("%f,",(theModel->item(index.row(),i)->text().toInt())/180.0*PI);
+            }
+            ready_send_msg += QString::asprintf("%f", (theModel->item(index.row(),FixedColumnCount-1)->text().toInt())/180.0*PI);
+        }else {
+            for(int i = 0; i < FixedColumnCount-1; i++){
+                ready_send_msg += QString::asprintf("%f,",(theModel->item(index.row(),i)->text().toInt()+zeroData.at(i))/180.0*PI);
+            }
+            ready_send_msg += QString::asprintf("%f", (theModel->item(index.row(),FixedColumnCount-1)->text().toInt()+zeroData.at(FixedColumnCount-1))/180.0*PI);
         }
-        ready_send_msg += QString::asprintf("%f", (theModel->item(index.row(),FixedColumnCount-1)->text().toInt()+zeroData.at(FixedColumnCount-1))/180.0*PI);
         ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
         QByteArray  send_msg=ready_send_msg.toUtf8();
         tcpClient->write(send_msg);
@@ -1866,7 +1873,8 @@ void MainWindow::onStartFileUpload()
             return;
         }
         bool flag = false;
-        flag = tcpClient->waitForBytesWritten(5);  // 防止粘包
+        flag = tcpClient->waitForBytesWritten(20);  // 防止粘包
+        tcpClient->waitForReadyRead(50);
 
         qApp->processEvents();
         if(!flag){
@@ -1901,7 +1909,8 @@ void MainWindow::onStartFileUpload()
                 emit clearGaitDataUploadProcessBar();
                 return;
             }
-            flag = tcpClient->waitForBytesWritten(5);
+            flag = tcpClient->waitForBytesWritten(20);
+            tcpClient->waitForReadyRead(50);
             qApp->processEvents();
             if(!flag){
                 QMessageBox::warning(this,"失败","文件已上传超时!");
