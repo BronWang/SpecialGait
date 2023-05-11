@@ -1872,12 +1872,11 @@ void MainWindow::onStartFileUpload()
             emit clearGaitDataUploadProcessBar();
             return;
         }
-        bool flag = false;
-        flag = tcpClient->waitForBytesWritten(20);  // 防止粘包
-        tcpClient->waitForReadyRead(50);
+        bool readret = false;
+        readret = tcpClient->waitForReadyRead();
 
         qApp->processEvents();
-        if(!flag){
+        if(!readret){
             QMessageBox::warning(this,"失败","文件已上传超时!");
             emit clearGaitDataUploadProcessBar();
             return;
@@ -1909,10 +1908,9 @@ void MainWindow::onStartFileUpload()
                 emit clearGaitDataUploadProcessBar();
                 return;
             }
-            flag = tcpClient->waitForBytesWritten(20);
-            tcpClient->waitForReadyRead(50);
+            readret = tcpClient->waitForReadyRead();
             qApp->processEvents();
-            if(!flag){
+            if(!readret){
                 QMessageBox::warning(this,"失败","文件已上传超时!");
                 emit clearGaitDataUploadProcessBar();
                 return;

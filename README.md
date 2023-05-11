@@ -19,10 +19,12 @@ Special Gait debug software built by Qt, which is used to debug the special gait
 
 # SpecialGait v1.2.1
 做了以下更新：
-1. 修复了文件上传bug
-2. 修复了零点调试时与自身数值叠加输出的bug
+1. 修复了零点调试时与自身数值叠加输出的bug
 
 # 2023/5/10
 1. 英文主界面
 2. 添加机器人步行调试功能
+
+# 2023/5/11
+1. 修复了文件上传bug
 
