@@ -24,7 +24,7 @@
        </size>
       </property>
       <property name="title">
-       <string>Log</string>
+       <string>数据记录</string>
       </property>
       <layout class="QVBoxLayout" name="verticalLayout_3">
        <item>
@@ -37,7 +37,7 @@
        <item>
         <widget class="QPushButton" name="pushButtonClearText">
          <property name="text">
-          <string>clear</string>
+          <string>清空</string>
          </property>
         </widget>
        </item>
@@ -46,14 +46,20 @@
     </item>
     <item>
      <widget class="QGroupBox" name="groupBox">
+      <property name="minimumSize">
+       <size>
+        <width>750</width>
+        <height>0</height>
+       </size>
+      </property>
       <property name="title">
-       <string>Debug slider</string>
+       <string>调试滑块</string>
       </property>
       <layout class="QGridLayout" name="gridLayout">
        <item row="2" column="1">
         <widget class="QPushButton" name="btnExecPreFrame">
          <property name="text">
-          <string>Execute Previous Frame</string>
+          <string>执行前一帧</string>
          </property>
         </widget>
        </item>
@@ -70,14 +76,14 @@
        <item row="5" column="0">
         <widget class="QPushButton" name="btnReturnCentralValue">
          <property name="text">
-          <string>Return to central value</string>
+          <string>回到中央值</string>
          </property>
         </widget>
        </item>
        <item row="2" column="2">
         <widget class="QPushButton" name="btnExecLaterFrame">
          <property name="text">
-          <string>Execute Next Frame</string>
+          <string>执行后一帧</string>
          </property>
          <property name="checkable">
           <bool>false</bool>
@@ -90,14 +96,14 @@
        <item row="3" column="2">
         <widget class="QPushButton" name="btnResetFrame">
          <property name="text">
-          <string>Reset to first frame</string>
+          <string>复位当前帧</string>
          </property>
         </widget>
        </item>
        <item row="2" column="3">
         <widget class="QPushButton" name="btnAppendFrame">
          <property name="text">
-          <string>Add Frame</string>
+          <string>添加帧</string>
          </property>
          <property name="checkable">
           <bool>false</bool>
@@ -110,7 +116,7 @@
        <item row="2" column="0">
         <widget class="QPushButton" name="btnRecordCurFrame">
          <property name="text">
-          <string>Record current frame</string>
+          <string>记录当前帧</string>
          </property>
          <property name="checkable">
           <bool>false</bool>
@@ -123,21 +129,21 @@
        <item row="3" column="0">
         <widget class="QPushButton" name="btnInsertFrame">
          <property name="text">
-          <string>Insert Frame</string>
+          <string>插入帧</string>
          </property>
         </widget>
        </item>
        <item row="3" column="1">
         <widget class="QPushButton" name="btnDelCurFrame">
          <property name="text">
-          <string>Delete current frame</string>
+          <string>删除当前帧</string>
          </property>
         </widget>
        </item>
        <item row="3" column="3">
         <widget class="QPushButton" name="btnExecList">
          <property name="text">
-          <string>Execute current sequence</string>
+          <string>执行当前帧序列</string>
          </property>
         </widget>
        </item>
@@ -157,7 +163,7 @@
            <rect>
             <x>0</x>
             <y>0</y>
-            <width>746</width>
+            <width>703</width>
             <height>771</height>
            </rect>
           </property>
@@ -1225,7 +1231,7 @@
          <item row="0" column="1">
           <widget class="QCheckBox" name="checkBoxNetwork">
            <property name="text">
-            <string>Network connected</string>
+            <string>网络已连接</string>
            </property>
            <property name="checkable">
             <bool>true</bool>
@@ -1238,7 +1244,7 @@
          <item row="1" column="0">
           <widget class="QPushButton" name="btnCancelSerialPortCon">
            <property name="text">
-            <string>Cancel</string>
+            <string>取消串口连接</string>
            </property>
            <property name="checkable">
             <bool>false</bool>
@@ -1251,14 +1257,14 @@
          <item row="1" column="1">
           <widget class="QPushButton" name="btnCancelNetCon">
            <property name="text">
-            <string>Cancel</string>
+            <string>取消网络连接</string>
            </property>
           </widget>
          </item>
          <item row="0" column="0">
           <widget class="QCheckBox" name="checkBoxSerial">
            <property name="text">
-            <string>Serial port connected</string>
+            <string>串口已连接</string>
            </property>
            <property name="checkable">
             <bool>true</bool>
@@ -1292,14 +1298,14 @@
          <item>
           <widget class="QRadioButton" name="rbtnAdjustZero">
            <property name="text">
-            <string>Adjust zero point</string>
+            <string>调节零点</string>
            </property>
           </widget>
          </item>
          <item>
           <widget class="QRadioButton" name="rbtnAdjustGait">
            <property name="text">
-            <string>Adjust gait</string>
+            <string>调节步态</string>
            </property>
           </widget>
          </item>
@@ -1321,7 +1327,7 @@
          </size>
         </property>
         <property name="title">
-         <string>File Description</string>
+         <string>文件描述</string>
         </property>
         <layout class="QGridLayout" name="gridLayout_3">
          <item row="0" column="1">
@@ -1330,7 +1336,7 @@
          <item row="1" column="0">
           <widget class="QLabel" name="label_28">
            <property name="text">
-            <string>Gait Rate:</string>
+            <string>步态帧率:</string>
            </property>
           </widget>
          </item>
@@ -1347,7 +1353,7 @@
          <item row="0" column="0">
           <widget class="QLabel" name="label_26">
            <property name="text">
-            <string>Gait ID:</string>
+            <string>步态号:</string>
            </property>
           </widget>
          </item>
@@ -1357,7 +1363,7 @@
          <item row="2" column="0">
           <widget class="QLabel" name="label_27">
            <property name="text">
-            <string>Gait Desc:</string>
+            <string>步态描述:</string>
            </property>
           </widget>
          </item>
@@ -1379,7 +1385,7 @@
    </property>
    <widget class="QMenu" name="menu">
     <property name="title">
-     <string>File</string>
+     <string>文件</string>
     </property>
     <addaction name="newFile"/>
     <addaction name="openFile"/>
@@ -1387,7 +1393,7 @@
    </widget>
    <widget class="QMenu" name="menu_2">
     <property name="title">
-     <string>Tools</string>
+     <string>工具</string>
     </property>
     <addaction name="serialPort"/>
     <addaction name="networkCom"/>
@@ -1397,7 +1403,7 @@
    </widget>
    <widget class="QMenu" name="menu_3">
     <property name="title">
-     <string>Help</string>
+     <string>帮助</string>
     </property>
     <addaction name="IkidRobotImage"/>
    </widget>
@@ -1453,7 +1459,7 @@
      <normaloff>:/images/images/066.GIF</normaloff>:/images/images/066.GIF</iconset>
    </property>
    <property name="text">
-    <string>Network</string>
+    <string>连接网络</string>
    </property>
    <property name="toolTip">
     <string>连接网络</string>
@@ -1510,7 +1516,7 @@
      <normaloff>:/images/images/100.bmp</normaloff>:/images/images/100.bmp</iconset>
    </property>
    <property name="text">
-    <string>New File</string>
+    <string>新建</string>
    </property>
   </action>
   <action name="openFile">
@@ -1519,7 +1525,7 @@
      <normaloff>:/images/images/100.bmp</normaloff>:/images/images/100.bmp</iconset>
    </property>
    <property name="text">
-    <string>Open File</string>
+    <string>打开文件</string>
    </property>
   </action>
   <action name="saveFile">
@@ -1528,7 +1534,7 @@
      <normaloff>:/images/images/save.bmp</normaloff>:/images/images/save.bmp</iconset>
    </property>
    <property name="text">
-    <string>Save File</string>
+    <string>保存文件</string>
    </property>
    <property name="toolTip">
     <string>保存文件</string>
@@ -1543,7 +1549,7 @@
      <normaloff>:/images/images/104.bmp</normaloff>:/images/images/104.bmp</iconset>
    </property>
    <property name="text">
-    <string>Save As</string>
+    <string>另存为</string>
    </property>
   </action>
   <action name="gaitUpload">
@@ -1552,7 +1558,7 @@
      <normaloff>:/images/images/126.bmp</normaloff>:/images/images/126.bmp</iconset>
    </property>
    <property name="text">
-    <string>File Upload</string>
+    <string>文件上传</string>
    </property>
   </action>
   <action name="walkDebug">
@@ -1561,7 +1567,7 @@
      <normaloff>:/images/images/804.bmp</normaloff>:/images/images/804.bmp</iconset>
    </property>
    <property name="text">
-    <string>walkDebug</string>
+    <string>行走调试</string>
    </property>
   </action>
  </widget>
