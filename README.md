@@ -28,3 +28,6 @@ Special Gait debug software built by Qt, which is used to debug the special gait
 # 2023/5/11
 1. 修复了文件上传bug
 
+# 2023/7/8
+改用tcp udp混合模式, udp用来专门负责滑块和连续执行的帧数据传输
+

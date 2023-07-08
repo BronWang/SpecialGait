@@ -10,6 +10,27 @@
 
 #pragma execution_character_set("utf-8")
 
+QString MainWindow::udpGetLocalIP()
+{
+    QString hostName=QHostInfo::localHostName();//本地主机名
+    QHostInfo   hostInfo=QHostInfo::fromName(hostName);
+    QString   localIP="";
+
+    QList<QHostAddress> addList=hostInfo.addresses();//
+
+    if (!addList.isEmpty())
+    for (int i=0;i<addList.count();i++)
+    {
+        QHostAddress aHost=addList.at(i);
+        if (QAbstractSocket::IPv4Protocol==aHost.protocol())
+        {
+            localIP=aHost.toString();
+            break;
+        }
+    }
+    return localIP;
+}
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -105,6 +126,12 @@ void MainWindow::on_networkCom_triggered()
     dlgNetwork->setWindowTitle("连接网络");
     // 功能细节
     if (tcpClient == NULL) tcpClient = new QTcpSocket(this);  //创建socket变量
+    if (udpSocket == NULL) udpSocket=new QUdpSocket(this);//用于与连接的客户端通讯的QudpSocket
+
+    if (udpSocket->bind(1111))//绑定端口成功
+    {
+        ui->plainTextEditGaitData->appendPlainText("绑定udp端口1111已成功绑定");
+    }
 
     dlgNetwork->getLocalIPv4();
 
@@ -503,6 +530,7 @@ void MainWindow::on_saveFile_triggered()
 void MainWindow::onConnectNetwork(QString IP, quint16 port)
 {
     tcpClient->connectToHost(IP, port);
+    tx2TargetIP = IP;
 }
 
 void MainWindow::onDisConnectNetwork()
@@ -990,7 +1018,7 @@ void MainWindow::send_horizontalSlider_Data()
             }
             QString ready_send_msg = "special_gait_data";
             ready_send_msg.append("\n");
-            ready_send_msg += QString::asprintf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
+            ready_send_msg += QString::asprintf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,",
                                                 (ui->horizontalSlider->value()+zeroData.at(0))/180.0*PI,
                                                 (ui->horizontalSlider_2->value()+zeroData.at(1))/180.0*PI,
                                                 (ui->horizontalSlider_3->value()+zeroData.at(2))/180.0*PI,
@@ -1019,12 +1047,15 @@ void MainWindow::send_horizontalSlider_Data()
                                                 );
             ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
             QByteArray  send_msg=ready_send_msg.toUtf8();
-            tcpClient->write(send_msg);
-            tcpClient->waitForBytesWritten(5);
+//            tcpClient->write(send_msg);
+//            tcpClient->waitForReadyRead(20);
+            QHostAddress    targetAddr(tx2TargetIP);
+            quint16     targetPort=1111;//目标port
+            udpSocket->writeDatagram(send_msg,targetAddr,targetPort); //发出数据报
         }else if(ui->rbtnAdjustZero->isChecked()){
             QString ready_send_msg = "special_gait_data";
             ready_send_msg.append("\n");
-            ready_send_msg += QString::asprintf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f",
+            ready_send_msg += QString::asprintf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,",
                                                 (ui->horizontalSlider->value())/180.0*PI,
                                                 (ui->horizontalSlider_2->value())/180.0*PI,
                                                 (ui->horizontalSlider_3->value())/180.0*PI,
@@ -1053,8 +1084,11 @@ void MainWindow::send_horizontalSlider_Data()
                                                 );
             ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
             QByteArray  send_msg=ready_send_msg.toUtf8();
-            tcpClient->write(send_msg);
-            tcpClient->waitForBytesWritten(5);
+//            tcpClient->write(send_msg);
+//            tcpClient->waitForReadyRead(20);
+            QHostAddress    targetAddr(tx2TargetIP);
+            quint16     targetPort=1111;//目标port
+            udpSocket->writeDatagram(send_msg,targetAddr,targetPort); //发出数据报
         }
     }
 }
@@ -1538,7 +1572,10 @@ void MainWindow::ExecCurrentFrame()
         }
         ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
         QByteArray  send_msg=ready_send_msg.toUtf8();
-        tcpClient->write(send_msg);
+//        tcpClient->write(send_msg);
+        QHostAddress    targetAddr(tx2TargetIP);
+        quint16     targetPort=1111;//目标port
+        udpSocket->writeDatagram(send_msg,targetAddr,targetPort); //发出数据报
     }
 }
 
@@ -1565,7 +1602,10 @@ void MainWindow::on_btnExecPreFrame_clicked()
         ready_send_msg += QString::asprintf("%f", (theModel->item(index.row()-1,FixedColumnCount-1)->text().toInt()+zeroData.at(FixedColumnCount-1))/180.0*PI);
         ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
         QByteArray  send_msg=ready_send_msg.toUtf8();
-        tcpClient->write(send_msg);
+//        tcpClient->write(send_msg);
+        QHostAddress    targetAddr(tx2TargetIP);
+        quint16     targetPort=1111;//目标port
+        udpSocket->writeDatagram(send_msg,targetAddr,targetPort); //发出数据报
         theSelection->clearSelection();
         theSelection->setCurrentIndex(theModel->index(index.row()-1,0),QItemSelectionModel::Select);
     }else{
@@ -1596,7 +1636,10 @@ void MainWindow::on_btnExecLaterFrame_clicked()
         ready_send_msg += QString::asprintf("%f", (theModel->item(index.row()+1,FixedColumnCount-1)->text().toInt()+zeroData.at(FixedColumnCount-1))/180.0*PI);
         ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
         QByteArray  send_msg=ready_send_msg.toUtf8();
-        tcpClient->write(send_msg);
+//        tcpClient->write(send_msg);
+        QHostAddress    targetAddr(tx2TargetIP);
+        quint16     targetPort=1111;//目标port
+        udpSocket->writeDatagram(send_msg,targetAddr,targetPort); //发出数据报
         theSelection->clearSelection();
         theSelection->setCurrentIndex(theModel->index(index.row()+1,0),QItemSelectionModel::Select);
     }else{
@@ -1622,7 +1665,10 @@ void MainWindow::on_btnResetFrame_clicked()
         ready_send_msg += QString::asprintf("%f", (theModel->item(0,FixedColumnCount-1)->text().toInt()+zeroData.at(FixedColumnCount-1))/180.0*PI);
         ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
         QByteArray  send_msg=ready_send_msg.toUtf8();
-        tcpClient->write(send_msg);
+//        tcpClient->write(send_msg);
+        QHostAddress    targetAddr(tx2TargetIP);
+        quint16     targetPort=1111;//目标port
+        udpSocket->writeDatagram(send_msg,targetAddr,targetPort); //发出数据报
         theSelection->clearSelection();
         theSelection->setCurrentIndex(theModel->index(0,0),QItemSelectionModel::Select);
     }else {
@@ -1658,11 +1704,15 @@ void MainWindow::on_btnExecList_clicked()
                 for(int j = 0; j < FixedColumnCount-1; j++){
                     ready_send_msg += QString::asprintf("%f,",((preFrameDataList.at(j)+((laterFrameDataList.at(j)-preFrameDataList.at(j))/(tempRate*1.0)*k))+zeroData.at(j))/180.0*PI);
                 }
-                ready_send_msg += QString::asprintf("%f", ((preFrameDataList.at(FixedColumnCount-1)+((laterFrameDataList.at(FixedColumnCount-1)-preFrameDataList.at(FixedColumnCount-1))/(tempRate*1.0)*k))+zeroData.at(FixedColumnCount-1))/180.0*PI);
+                ready_send_msg += QString::asprintf("%f,", ((preFrameDataList.at(FixedColumnCount-1)+((laterFrameDataList.at(FixedColumnCount-1)-preFrameDataList.at(FixedColumnCount-1))/(tempRate*1.0)*k))+zeroData.at(FixedColumnCount-1))/180.0*PI);
                 ui->plainTextEditGaitData->appendPlainText("[out] "+ready_send_msg);
                 QByteArray  send_msg=ready_send_msg.toUtf8();
-                tcpClient->write(send_msg);
-                tcpClient->waitForReadyRead(20);
+//                tcpClient->write(send_msg);
+//                tcpClient->waitForReadyRead(20);
+                QHostAddress    targetAddr(tx2TargetIP);
+                quint16     targetPort=1111;//目标port
+                udpSocket->writeDatagram(send_msg,targetAddr,targetPort); //发出数据报
+                udpSocket->waitForReadyRead(20);
                 qApp->processEvents();
             }
         }

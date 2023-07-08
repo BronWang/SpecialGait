@@ -18,6 +18,7 @@
 #include <QDebug>
 #include <QStandardItemModel>
 #include <QItemSelectionModel>
+#include <QUdpSocket>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -35,7 +36,9 @@ private:
     QByteArray serialPortBuffer;  // 串口接收数据缓冲区
 
     DialogNetworkConnect *dlgNetwork = NULL;  // 网络连接窗口
+    QString tx2TargetIP;
     QTcpSocket *tcpClient = NULL;  // 客户端socket
+    QUdpSocket  *udpSocket;// 用来专门负责滑块和连续执行的帧数据传输
     QLabel *labelSocketState;  // 客户端socket状态标签
     QLabel *labelSeverIP;  // 服务端IP标签
     QByteArray networkBuffer;  // 网络接收数据缓冲区
@@ -66,6 +69,8 @@ private:
     QStringList currentGaitFrames;
     //存储步态帧率
     int currentGaitRate=0;
+
+    QString udpGetLocalIP();//获取本机IP地址
 
 public:
     MainWindow(QWidget *parent = nullptr);
