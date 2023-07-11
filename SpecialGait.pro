@@ -18,11 +18,13 @@ SOURCES += \
     datavisionzmp.cpp \
     dialognetworkconnect.cpp \
     dialogserialport.cpp \
+    gaitupload.cpp \
     ikidrobotimage.cpp \
     main.cpp \
     mainwindow.cpp \
     packettransformer.cpp \
-    sshconnectwindow.cpp
+    sshconnectwindow.cpp \
+    walkdebug.cpp
 
 HEADERS += \
     Eigen/Cholesky \
@@ -368,11 +370,13 @@ HEADERS += \
     def.h \
     dialognetworkconnect.h \
     dialogserialport.h \
+    gaitupload.h \
     ikidrobotimage.h \
     mainwindow.h \
     packettransformer.h \
     serialPacket.h \
-    sshconnectwindow.h
+    sshconnectwindow.h \
+    walkdebug.h
 
 FORMS += \
     datavisiondynamixel.ui \
@@ -380,9 +384,11 @@ FORMS += \
     datavisionzmp.ui \
     dialognetworkconnect.ui \
     dialogserialport.ui \
+    gaitupload.ui \
     ikidrobotimage.ui \
     mainwindow.ui \
-    sshconnectwindow.ui
+    sshconnectwindow.ui \
+    walkdebug.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

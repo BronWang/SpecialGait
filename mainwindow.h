@@ -10,12 +10,15 @@
 #include "sshconnectwindow.h"
 #include "packettransformer.h"
 #include "ikidrobotimage.h"
+#include "gaitupload.h"
+#include "walkdebug.h"
 #include <QMessageBox>
 #include <QTimer>
 #include <QLabel>
 #include <QDebug>
 #include <QStandardItemModel>
 #include <QItemSelectionModel>
+#include <QUdpSocket>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,7 +36,9 @@ private:
     QByteArray serialPortBuffer;  // 串口接收数据缓冲区
 
     DialogNetworkConnect *dlgNetwork = NULL;  // 网络连接窗口
+    QString tx2TargetIP;
     QTcpSocket *tcpClient = NULL;  // 客户端socket
+    QUdpSocket  *udpSocket;// 用来专门负责滑块和连续执行的帧数据传输
     QLabel *labelSocketState;  // 客户端socket状态标签
     QLabel *labelSeverIP;  // 服务端IP标签
     QByteArray networkBuffer;  // 网络接收数据缓冲区
@@ -48,6 +53,10 @@ private:
 
     IkidRobotImage *ikidImage = NULL;
 
+    GaitUpload *gaitUpload = NULL;
+
+    WalkDebug *walkDebug = NULL;
+
     // 用来显示tableview数据
     QStandardItemModel *theModel;
     QItemSelectionModel *theSelection;
@@ -60,6 +69,8 @@ private:
     QStringList currentGaitFrames;
     //存储步态帧率
     int currentGaitRate=0;
+
+    QString udpGetLocalIP();//获取本机IP地址
 
 public:
     MainWindow(QWidget *parent = nullptr);
@@ -168,6 +179,8 @@ private slots:
 
     void on_horizontalSlider_25_valueChanged(int value);
 
+    void on_horizontalSlider_26_valueChanged(int value);
+
     void on_spinBox_valueChanged(int arg1);
 
     void on_spinBox_2_valueChanged(int arg1);
@@ -218,9 +231,13 @@ private slots:
 
     void on_spinBox_25_valueChanged(int arg1);
 
+    void on_spinBox_26_valueChanged(int arg1);
+
     void on_btnReturnCentralValue_clicked();
 
     void on_btnRecordCurFrame_clicked();
+
+    void ExecCurrentFrame();
 
     void on_btnExecPreFrame_clicked();
 
@@ -240,10 +257,26 @@ private slots:
 
     void on_IkidRobotImage_triggered();
 
+    void on_gaitUpload_triggered();
+
+    void onStartFileUpload();
+
+    void on_walkDebug_triggered();
+
+    void onCmd_walk_start_walk();
+    void onCmd_walk_forward();
+    void onCmd_walk_left();
+    void onCmd_walk_right();
+    void onCmd_walk_stop();
+    void onCmd_walk_end_walk();
+
 private:
     Ui::MainWindow *ui;
     void iniModelFromStringList(QStringList& fileContent);
     void iniModelFromStringList_zeroPoint(QStringList& fileContent);
+signals:
+    void gaitDataUploadProcess(int cur, int total);
+    void clearGaitDataUploadProcessBar();
 
 };
 #endif // MAINWINDOW_H
