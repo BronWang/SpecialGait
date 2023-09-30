@@ -74,3 +74,16 @@ void WalkDebug::on_pushButtonEndWalk_clicked()
     ui->pushButtonEndWalk->setEnabled(false);
 }
 
+
+void WalkDebug::on_btnExecute_clicked()
+{
+    QString number = ui->comboBoxGaitNumber->currentText();
+    ui->btnExecute->setEnabled(false);
+    emit cmd_execute_gait_number(number);
+}
+
+void WalkDebug::on_cmd_execute_gait_number_end()
+{
+    ui->btnExecute->setEnabled(true);
+}
+

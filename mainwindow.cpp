@@ -36,7 +36,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    this->setWindowTitle("SpecialGait");
+    this->setWindowTitle("SpecialGait 2.1");
     ui->checkBoxSerial->setEnabled(false);
     ui->checkBoxNetwork->setEnabled(false);
     ui->btnCancelSerialPortCon->setEnabled(false);
@@ -597,7 +597,10 @@ void MainWindow::onSocketReadyRead()
 {
     networkBuffer = tcpClient->readAll();
 
-
+    QString temp = "success cmd_execute_gait_number";
+    if(networkBuffer == temp){
+        emit cmd_execute_gait_number_end();
+    }
     // 暂时借用plainTextEditGaitData测试显示
     ui->plainTextEditGaitData->appendPlainText(networkBuffer);
 
@@ -1990,6 +1993,8 @@ void MainWindow::on_walkDebug_triggered()
         connect(walkDebug, SIGNAL(cmd_walk_right()), this, SLOT(onCmd_walk_right()));
         connect(walkDebug, SIGNAL(cmd_walk_stop()), this, SLOT(onCmd_walk_stop()));
         connect(walkDebug, SIGNAL(cmd_walk_end_walk()), this, SLOT(onCmd_walk_end_walk()));
+        connect(walkDebug, SIGNAL(cmd_execute_gait_number(QString)), this, SLOT(onCmd_execute_gait_number(QString)));
+        connect(this, SIGNAL(cmd_execute_gait_number_end()), walkDebug, SLOT(on_cmd_execute_gait_number_end()));
     }
     walkDebug->setWindowModality(Qt::ApplicationModal);
     walkDebug->show();
@@ -2085,6 +2090,25 @@ void MainWindow::onCmd_walk_end_walk()
 {
     if(ui->checkBoxNetwork->isChecked()){
         return;
+    }else {
+        QMessageBox::information(this,"提示","请先连接网络！");
+    }
+}
+
+void MainWindow::onCmd_execute_gait_number(QString number)
+{
+    if(ui->checkBoxNetwork->isChecked()){
+        QString ready_send_msg = "cmd_execute_gait_number";
+        ready_send_msg.append("\n");
+        ready_send_msg.append(number);
+        ready_send_msg.append("\n");
+        QByteArray  send_msg=ready_send_msg.toUtf8();
+        int ret = -1;
+        ret = tcpClient->write(send_msg);
+        if(ret == -1){
+            QMessageBox::warning(this,"失败","gait_number 执行失败，客户端报错或网络连接已断开!");
+            return;
+        }
     }else {
         QMessageBox::information(this,"提示","请先连接网络！");
     }

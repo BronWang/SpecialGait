@@ -269,6 +269,7 @@ private slots:
     void onCmd_walk_right();
     void onCmd_walk_stop();
     void onCmd_walk_end_walk();
+    void onCmd_execute_gait_number(QString);
 
 private:
     Ui::MainWindow *ui;
@@ -277,6 +278,7 @@ private:
 signals:
     void gaitDataUploadProcess(int cur, int total);
     void clearGaitDataUploadProcessBar();
+    void cmd_execute_gait_number_end();
 
 };
 #endif // MAINWINDOW_H

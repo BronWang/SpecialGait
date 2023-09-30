@@ -22,6 +22,7 @@ signals:
     void cmd_walk_right();
     void cmd_walk_stop();
     void cmd_walk_end_walk();
+    void cmd_execute_gait_number(QString);
 private slots:
     void on_pushButtonStartWalk_clicked();
 
@@ -34,6 +35,10 @@ private slots:
     void on_pushButtonStop_clicked();
 
     void on_pushButtonEndWalk_clicked();
+
+    void on_btnExecute_clicked();
+
+    void on_cmd_execute_gait_number_end();
 
 private:
     Ui::WalkDebug *ui;

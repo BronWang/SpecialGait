@@ -31,3 +31,7 @@ Special Gait debug software built by Qt, which is used to debug the special gait
 # 2023/7/8
 改用tcp udp混合模式, udp用来专门负责滑块和连续执行的帧数据传输
 
+# 2023/9/30
+1.添加了特殊步态执行功能
+2.添加了步态号说明
+
