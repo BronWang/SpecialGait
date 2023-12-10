@@ -72,6 +72,8 @@ private:
 
     QString udpGetLocalIP();//获取本机IP地址
 
+    void UnEnableAll();
+
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
@@ -273,8 +275,8 @@ private slots:
 
 private:
     Ui::MainWindow *ui;
-    void iniModelFromStringList(QStringList& fileContent);
-    void iniModelFromStringList_zeroPoint(QStringList& fileContent);
+    bool iniModelFromStringList(QStringList& fileContent);
+    bool iniModelFromStringList_zeroPoint(QStringList& fileContent);
 signals:
     void gaitDataUploadProcess(int cur, int total);
     void clearGaitDataUploadProcessBar();

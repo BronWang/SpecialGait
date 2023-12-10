@@ -31,12 +31,8 @@ QString MainWindow::udpGetLocalIP()
     return localIP;
 }
 
-MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
-    , ui(new Ui::MainWindow)
+void MainWindow::UnEnableAll()
 {
-    ui->setupUi(this);
-    this->setWindowTitle("SpecialGait 2.1");
     ui->checkBoxSerial->setEnabled(false);
     ui->checkBoxNetwork->setEnabled(false);
     ui->btnCancelSerialPortCon->setEnabled(false);
@@ -55,6 +51,15 @@ MainWindow::MainWindow(QWidget *parent)
     ui->rbtnAdjustGait->setChecked(true);
     ui->rbtnAdjustGait->setEnabled(false);
     ui->rbtnAdjustZero->setEnabled(false);
+}
+
+MainWindow::MainWindow(QWidget *parent)
+    : QMainWindow(parent)
+    , ui(new Ui::MainWindow)
+{
+    ui->setupUi(this);
+    this->setWindowTitle("SpecialGait 2.3");
+    UnEnableAll();
 
     labelSocketState = new QLabel("Socket status：");
     labelSocketState->setMinimumWidth(250);
@@ -415,11 +420,17 @@ void MainWindow::on_openFile_triggered()
         QMessageBox::warning(this,"警告","文件为空！");
         return;
     }
-    iniModelFromStringList(fileContent);
-    ui->anotherSaveFile->setEnabled(true);
-    ui->btnExecList->setEnabled(true);
-    ui->rbtnAdjustGait->setEnabled(true);
-    ui->rbtnAdjustZero->setEnabled(true);
+    if(iniModelFromStringList(fileContent)){
+        ui->anotherSaveFile->setEnabled(true);
+        ui->btnExecList->setEnabled(true);
+        ui->rbtnAdjustGait->setEnabled(true);
+        ui->rbtnAdjustZero->setEnabled(true);
+        ui->rbtnAdjustGait->setChecked(true);
+    }else {
+        currentFileName = "";
+        UnEnableAll();
+    }
+
 }
 
 
@@ -752,21 +763,21 @@ void MainWindow::on_tableView_clicked(const QModelIndex &index)
     }
 }
 
-void MainWindow::iniModelFromStringList(QStringList &fileContent)
+bool MainWindow::iniModelFromStringList(QStringList &fileContent)
 {
     theModel->setRowCount(fileContent.count()-9);
     QString temp;
     temp = fileContent.at(0);
     if(temp != "GaitID"){
         QMessageBox::warning(this,"警告","文件格式不正确！");
-        return;
+        return false;
     }
     QString gaitID = fileContent.at(1);
     ui->lineEditGaitID->setText(gaitID);
     temp = fileContent.at(2);
     if(temp != "GaitRate"){
         QMessageBox::warning(this,"警告","文件格式不正确！");
-        return;
+        return false;
     }
     QString gaitRate = fileContent.at(3);
     ui->lineEditGaitRate->setText(gaitRate);
@@ -774,28 +785,35 @@ void MainWindow::iniModelFromStringList(QStringList &fileContent)
     temp = fileContent.at(4);
     if(temp != "GaitDescription"){
         QMessageBox::warning(this,"警告","文件格式不正确！");
-        return;
+        return false;
     }
     QString gaitDesc = fileContent.at(5);
     ui->textEditGaitDesc->setText(gaitDesc);
     temp = fileContent.at(6);
     if(temp != "zero_point"){
         QMessageBox::warning(this,"警告","文件格式不正确！");
-        return;
+        return false;
     }
     QString zero_point = fileContent.at(7);
     currentZeroPoint = zero_point;
-//    QStringList zero_point_list = zero_point.split(",",QString::SkipEmptyParts);
+    if(zero_point.split(",",QString::SkipEmptyParts).count() != FixedColumnCount){
+        QMessageBox::warning(this,"警告","文件格式不正确！");
+        return false;
+    }
     temp = fileContent.at(8);
     if(temp != "Gait_Frame"){
         QMessageBox::warning(this,"警告","文件格式不正确！");
-        return;
+        return false;
     }
     currentGaitFrames.clear();
     for(int i = 9;i < fileContent.count();i++){
         QString gait_frame = fileContent.at(i);
         currentGaitFrames.append(gait_frame);
         QStringList gait_frame_list = gait_frame.split(",",QString::SkipEmptyParts);
+        if(gait_frame_list.count() != FixedColumnCount+1){
+            QMessageBox::warning(this,"警告","文件格式不正确！");
+            return false;
+        }
         for(int j = 0; j < FixedColumnCount;j++){
             QStandardItem *item = new QStandardItem(gait_frame_list.at(j));
             theModel->setItem(i-9,j,item);
@@ -805,23 +823,25 @@ void MainWindow::iniModelFromStringList(QStringList &fileContent)
         theModel->setItem(i-9,FrameRateColumn,frameItem);
     }
 
+    return true;
+
 }
 
-void MainWindow::iniModelFromStringList_zeroPoint(QStringList &fileContent)
+bool MainWindow::iniModelFromStringList_zeroPoint(QStringList &fileContent)
 {
     theModel->setRowCount(1);
     QString temp;
     temp = fileContent.at(0);
     if(temp != "GaitID"){
         QMessageBox::warning(this,"警告","文件格式不正确！");
-        return;
+        return false;
     }
     QString gaitID = fileContent.at(1);
     ui->lineEditGaitID->setText(gaitID);
     temp = fileContent.at(2);
     if(temp != "GaitRate"){
         QMessageBox::warning(this,"警告","文件格式不正确！");
-        return;
+        return false;
     }
     QString gaitRate = fileContent.at(3);
     ui->lineEditGaitRate->setText(gaitRate);
@@ -829,25 +849,30 @@ void MainWindow::iniModelFromStringList_zeroPoint(QStringList &fileContent)
     temp = fileContent.at(4);
     if(temp != "GaitDescription"){
         QMessageBox::warning(this,"警告","文件格式不正确！");
-        return;
+        return false;
     }
     QString gaitDesc = fileContent.at(5);
     ui->textEditGaitDesc->setText(gaitDesc);
     temp = fileContent.at(6);
     if(temp != "zero_point"){
         QMessageBox::warning(this,"警告","文件格式不正确！");
-        return;
+        return false;
     }
     QString zero_point = fileContent.at(7);
     currentZeroPoint = zero_point;
     QStringList zero_point_list = zero_point.split(",",QString::SkipEmptyParts);
-
+    if(zero_point_list.count() != FixedColumnCount){
+        QMessageBox::warning(this,"警告","文件格式不正确！");
+        return false;
+    }
     for(int i = 0; i < zero_point_list.count(); i++){
         QStandardItem *item = new QStandardItem(zero_point_list.at(i));
         theModel->setItem(0,i,item);
     }
     QStandardItem *item = new QStandardItem("1"); // 单独添加帧数列，防止报错
     theModel->setItem(0,FrameRateColumn,item);
+
+    return true;
 }
 
 
@@ -1056,7 +1081,7 @@ void MainWindow::send_horizontalSlider_Data()
             quint16     targetPort=1111;//目标port
             udpSocket->writeDatagram(send_msg,targetAddr,targetPort); //发出数据报
         }else if(ui->rbtnAdjustZero->isChecked()){
-            QString ready_send_msg = "special_gait_data";
+            QString ready_send_msg = "zero_data";
             ready_send_msg.append("\n");
             ready_send_msg += QString::asprintf("%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,%f,",
                                                 (ui->horizontalSlider->value())/180.0*PI,
@@ -1548,6 +1573,7 @@ void MainWindow::on_btnRecordCurFrame_clicked()
     theModel->item(index.row(),23)->setData(ui->horizontalSlider_24->value(),Qt::DisplayRole);
     theModel->item(index.row(),24)->setData(ui->horizontalSlider_25->value(),Qt::DisplayRole);
     theModel->item(index.row(),25)->setData(ui->horizontalSlider_26->value(),Qt::DisplayRole);
+    on_saveFile_triggered();
 }
 
 void MainWindow::ExecCurrentFrame()
@@ -1563,6 +1589,7 @@ void MainWindow::ExecCurrentFrame()
         QString ready_send_msg = "special_gait_data";
         ready_send_msg.append("\n");
         if(ui->rbtnAdjustZero->isChecked()){
+            ready_send_msg = "zero_data";
             for(int i = 0; i < FixedColumnCount-1; i++){
                 ready_send_msg += QString::asprintf("%f,",(theModel->item(index.row(),i)->text().toInt())/180.0*PI);
             }
@@ -1805,11 +1832,17 @@ void MainWindow::on_newFile_triggered()
         QMessageBox::warning(this,"警告","文件为空！");
         return;
     }
-    iniModelFromStringList(fileContent);
-    ui->anotherSaveFile->setEnabled(true);
-    ui->btnExecList->setEnabled(true);
-    ui->rbtnAdjustGait->setEnabled(true);
-    ui->rbtnAdjustZero->setEnabled(true);
+    if(iniModelFromStringList(fileContent)){
+        ui->anotherSaveFile->setEnabled(true);
+        ui->btnExecList->setEnabled(true);
+        ui->rbtnAdjustGait->setEnabled(true);
+        ui->rbtnAdjustZero->setEnabled(true);
+        ui->rbtnAdjustGait->setChecked(true);
+    }else {
+        currentFileName = "";
+        UnEnableAll();
+    }
+
 }
 
 
@@ -1838,15 +1871,20 @@ void MainWindow::on_rbtnAdjustZero_clicked()
         QMessageBox::warning(this,"警告","文件为空！");
         return;
     }
-    iniModelFromStringList_zeroPoint(fileContent);
-    ui->anotherSaveFile->setEnabled(true);
-    ui->btnExecList->setEnabled(true);
-    ui->btnDelCurFrame->setEnabled(false);
-    ui->btnAppendFrame->setEnabled(false);
-    ui->btnInsertFrame->setEnabled(false);
-    ui->btnExecLaterFrame->setEnabled(false);
-    ui->btnExecPreFrame->setEnabled(false);
-    ui->btnResetFrame->setEnabled(false);
+    if(iniModelFromStringList_zeroPoint(fileContent)){
+        ui->anotherSaveFile->setEnabled(true);
+        ui->btnExecList->setEnabled(true);
+        ui->btnDelCurFrame->setEnabled(false);
+        ui->btnAppendFrame->setEnabled(false);
+        ui->btnInsertFrame->setEnabled(false);
+        ui->btnExecLaterFrame->setEnabled(false);
+        ui->btnExecPreFrame->setEnabled(false);
+        ui->btnResetFrame->setEnabled(false);
+    }else {
+        currentFileName = "";
+        UnEnableAll();
+    }
+
 }
 
 
@@ -1875,9 +1913,14 @@ void MainWindow::on_rbtnAdjustGait_clicked()
         QMessageBox::warning(this,"警告","文件为空！");
         return;
     }
-    iniModelFromStringList(fileContent);
-    ui->anotherSaveFile->setEnabled(true);
-    ui->btnExecList->setEnabled(true);
+    if(iniModelFromStringList(fileContent)){
+        ui->anotherSaveFile->setEnabled(true);
+        ui->btnExecList->setEnabled(true);
+    }else {
+        currentFileName = "";
+        UnEnableAll();
+    }
+
 
 }
 

@@ -35,3 +35,10 @@ Special Gait debug software built by Qt, which is used to debug the special gait
 1.添加了特殊步态执行功能
 2.添加了步态号说明
 
+# 2023/10/4
+1.修复文件格式错误，软件闪退bug
+2.添加记录当前帧后自动保存功能
+
+# 2023/12/10
+1.改进零点调节形式
+
